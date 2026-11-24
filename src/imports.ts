@@ -22,7 +22,7 @@ export const fields={firstName:['nombre','nombres'],lastName:['apellido','apelli
 export type Field=keyof typeof fields;
 export const targetFields=(target:Target):Field[]=>target==='Candidatos'?['firstName','lastName','code','email','phone','profession','experience','availability','cv','notes']:target==='Rentas'?['name','detail','job','unit','schedule','employer','amount','from']:['name','detail'];
 export type Mapping=Partial<Record<Field,number>>;
-export function guessMapping(header:string[],target:Target):Mapping{const out:Mapping={};for(const key of targetFields(target)){const matches=header.map((h,i)=>({h:normalize(h),i})).filter(x=>(fields[key] as readonly string[]).includes(x.h));if(matches.length===1)out[key]=matches[0].i;}return out;}
+export function guessMapping(header:string[],target:Target):Mapping{const out:Mapping={};for(const key of targetFields(target)){const aliases:readonly string[]=target==='Rentas'&&key==='name'?['nombre','nombre de renta','nombre renta']:fields[key];const matches=header.map((h,i)=>({h:normalize(h),i})).filter(x=>aliases.includes(x.h));if(matches.length===1)out[key]=matches[0].i;}return out;}
 export type Review={key:string;source:string;values:Partial<Record<Field,string>>;selected:boolean};
 export function mappedRows(grid:Grid,map:Mapping,target:Target):Review[]{validateGrid(grid);return grid.slice(1).map((row,i)=>({key:'row-'+i,source:'Fila '+(i+2),selected:true,values:Object.fromEntries(targetFields(target).map(k=>[k,map[k]===undefined?'':row[map[k]!]??'']))}));}
 export function extractCv(text:string,source:string,key:string):Review{
@@ -45,7 +45,7 @@ export function planImport(target:Target,review:Review[],catalog:Entry[],recruit
   }else{
    const d={...blank(target),name:get('name'),detail:get('detail')};
    if(target==='Rentas'){
-    const find=(kind:Kind,key:Field)=>nextCatalog.find(x=>x.kind===kind&&x.active&&normalize(x.name)===normalize(get(key)))?.id??'';
+    const find=(kind:Kind,key:Field)=>{const matches=nextCatalog.filter(x=>x.kind===kind&&x.active&&normalize(x.name)===normalize(get(key)));if(matches.length>1)throw Error('Referencia ambigua: '+get(key)+'. Revisa el catálogo.');return matches[0]?.id??'';};
     Object.assign(d,{jobId:find('Cargos','job'),unitId:find('Unidades','unit'),scheduleId:find('Horarios','schedule'),employerId:find('Empresas','employer'),amount:/^\d+$/.test(get('amount'))?Number(get('amount')):NaN,from:get('from')});
    }
    nextCatalog=saveEntry(nextCatalog,d,makeId());
@@ -53,4 +53,9 @@ export function planImport(target:Target,review:Review[],catalog:Entry[],recruit
   results.push({key:r.key,source:r.source,ok:true,message:'Listo para agregar'});
  }catch(e){results.push({key:r.key,source:r.source,ok:false,message:e instanceof Error?e.message:'Registro inválido'});}}
  return {catalog:nextCatalog,recruit:nextRecruit,results};
+}
+
+export function importTemplate(target:Target):string{
+ const rows=target==='Candidatos'?[['Nombre','Apellido','Código DEMO','Correo','Teléfono','Profesión','Experiencia','Disponibilidad','CV','Observaciones'],['Persona','Ejemplo','DEMO-PLANTILLA','ejemplo@example.invalid','000000001','Cargo DEMO','','','','']]:target==='Rentas'?[['Nombre','Cargo','Unidad','Horario','Empresa','Renta CLP','Vigente desde','Detalle'],['Renta DEMO','Cargo DEMO','Unidad DEMO','Horario DEMO','Empresa DEMO','500000','2026-11-01','Valor ficticio']]:[['Nombre','Detalle'],[target+' DEMO','Ejemplo ficticio']];
+ return '\uFEFF'+rows.map(r=>r.join(';')).join('\r\n');
 }
