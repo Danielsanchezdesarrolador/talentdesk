@@ -479,7 +479,9 @@ try {
       console.log('OCR_PNG_PASS '+viewport.width);
       const scanned=scannedPdf(Buffer.from(raster.jpeg,'base64'),1500,700);
       await page.getByLabel('CV escaneado ficticio OCR').setInputFiles({name:'escaneo-imagen-demo.pdf',mimeType:'application/pdf',buffer:scanned});
-      await page.getByText(/escaneo-imagen-demo\.pdf ·/).waitFor({timeout:90000});
+      const scanResult=page.getByText(/escaneo-imagen-demo\.pdf ·/),scanError=page.locator('[role="alert"]:visible');
+      await scanResult.or(scanError).first().waitFor({timeout:90000});
+      if(!await scanResult.isVisible())throw Error('OCR_PDF_OBSERVED '+await scanError.allTextContents());
       await page.getByText(/escaneo-imagen-demo\.pdf ·/).click();
       assert.match(await page.getByLabel('escaneo-imagen-demo.pdf Nombre',{exact:true}).inputValue(),/Persona/i);
       assert.match(await page.getByLabel('escaneo-imagen-demo.pdf Apellido',{exact:true}).inputValue(),/Escaneo/i);

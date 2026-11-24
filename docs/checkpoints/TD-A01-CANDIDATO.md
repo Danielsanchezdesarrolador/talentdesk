@@ -1,0 +1,3 @@
+# TD-A01 — Cierre técnico Smart
+RC02 CI 45462586404/job 138688914038: 137/137, build PASS, audit 0, BULK_INCOME_PASS y OCR_PNG_PASS 1366; OCR PDF timeout, móvil no alcanzado. Render LIVE reportado por propietario, SHA no comprobado por falta de acceso a cuenta nueva.
+Lock exacto verificado SHA256 3100aa4b6f633b148aaeec01d89c86403fff1eb5ee8c1f83274ed44f0c84d497, 106 entradas, raíz coincide, registry público. npm ci. OCR PDF: recursos locales de PDF.js y contexto explícito; hipótesis de recursos/renderizado sin causa demostrada; alerta QA visible. Referencia API https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib.html. CI pendiente, sin despliegue.
