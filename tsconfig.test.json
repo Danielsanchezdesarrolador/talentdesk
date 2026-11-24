@@ -12,6 +12,7 @@
   },
   "include": [
     "src/vacancies.ts",
-    "src/catalogs.ts"
+    "src/catalogs.ts",
+    "src/recruitment.ts"
   ]
 }

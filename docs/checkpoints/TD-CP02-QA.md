@@ -7,3 +7,6 @@ Se añade una prueba de navegador Chromium sobre preview local del build: 1366x9
 Run 45437812741 / job 138600321924, SHA 71dd37014795370370b8f1db9160f0dd148e27fa: 9/9 pruebas y build PASS, instalación de Chromium FAIL por Ubuntu 26.04 no soportado por Playwright 1.56.1, recorrido SKIP. Corrección acotada: runner ubuntu-24.04, mismo navegador y misma prueba; no alterar lógica para resolver problema de infraestructura. Resultado pendiente. Aprendizaje candidato reutilizable: fijar imagen compatible del runner para evitar cambios de ubuntu-latest; no incorporar a biblioteca privada hasta comprobarlo.
 
 Run 45438132159 / job 138601460930: instalación Chromium PASS en Ubuntu 24.04, pruebas de dominio y build PASS. Recorrido FAIL por timeout getByLabel('Estado', exact:true) después de alta, duplicado, edición, navegación y recarga en escritorio. Se añade aria-label explícita al select, manteniendo la prueba. No se declara PASS del recorrido completo.
+
+## Resultado confirmado
+CI 45438733264, job 138603598879, SHA a88b247a17642887d738611df99e812b689276e1: SUCCESS; 19/19 dominio, build y recorrido Chromium 1366x900 y 390x844 PASS. Correcciones de entorno y etiqueta confirmadas en conjunto. No prueba física ni aceptación humana.

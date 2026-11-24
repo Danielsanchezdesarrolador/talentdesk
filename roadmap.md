@@ -4,11 +4,11 @@ Objetivo: gestionar vacantes, candidatos, contactos, entrevistas e ingresos desd
 | Etapa | Estado | Salida verificable |
 |---|---|---|
 | TD-CP01 Definición | Cerrado (alcance inicial) | Alcance inicial y diseño Studio aprobados; backend real y activos finales diferidos |
-| TD-CP02 Cimientos | En curso | Primera operación persistente sintética y validación en navegador; acceso privado requerido antes de datos reales |
-| TD-CP03 Catálogos | En curso (candidato) | Cargos, unidades, jefaturas, horarios, rentas, empresas y plantillas editables con datos ficticios; condiciones asociables a vacantes |
-| TD-CP04 Vacantes | Pendiente | Crear, editar, buscar y cerrar vacantes con historial |
-| TD-CP05 Candidatos | Pendiente | Ficha única, CV sintético, postulaciones y detección de duplicados |
-| TD-CP06 Llamados | Pendiente | Cola de contactos, resultados y seguimiento |
+| TD-CP02 Cimientos | Validado técnicamente (DEMO) | Primera operación persistente sintética y validación en navegador; acceso privado requerido antes de datos reales |
+| TD-CP03 Catálogos | Validado técnicamente (DEMO) | Cargos, unidades, jefaturas, horarios, rentas, empresas y plantillas editables con datos ficticios; condiciones asociables a vacantes |
+| TD-CP04 Vacantes | Candidato publicado | Crear, editar, buscar y cerrar vacantes con historial |
+| TD-CP05 Candidatos | Candidato publicado | Ficha única, CV sintético, postulaciones y detección de duplicados |
+| TD-CP06 Llamados | Candidato publicado | Cola de contactos, resultados y seguimiento |
 | TD-CP07 Entrevistas | Pendiente | Agenda, asistencia, feedback y decisión humana |
 | TD-CP08 Ingresos | Pendiente | Autocompletar condiciones, elegir empresa, generar fila y borrador de correo |
 | TD-CP09 Automatización | Pendiente | Flujos autorizados con pruebas sintéticas, conciliación y control de duplicados |
