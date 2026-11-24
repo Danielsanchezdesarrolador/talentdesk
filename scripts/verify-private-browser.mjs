@@ -23,9 +23,13 @@ try{
  await q.getByRole('button',{name:'Descartar borrador y actualizar'}).click();await q.getByText('Revisión del servidor: 1',{exact:true}).waitFor();
  assert.equal(await p.locator('#candidates').innerText(),await q.locator('#candidates').innerText());
  await q.reload();await q.getByText('Candidatos: 1',{exact:true}).waitFor();
+ await p.getByRole('button',{name:'Generar CV ficticio del primer candidato guardado'}).click();
+ await p.getByText('1 originales verificados.',{exact:true}).waitFor();
+ await q.getByRole('button',{name:'Consultar documentos originales'}).click();await q.getByText('1 originales verificados.',{exact:true}).waitFor();
+ const download=q.waitForEvent('download');await q.getByRole('link',{name:'Descargar original CV DEMO'}).click();assert.match((await download).suggestedFilename(),/^talentdesk-DEMO-.*\.pdf$/);
  assert.deepEqual(await q.evaluate(()=>[localStorage.length,sessionStorage.length]),[0,0]);
  await mkdir('qa-output',{recursive:true});await p.screenshot({path:'qa-output/private-lab-desktop.png',fullPage:true});await q.screenshot({path:'qa-output/private-lab-mobile.png',fullPage:true});
  assert.ok(await q.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
- lab.revokeAll();for(const x of [p,q]){await x.getByRole('heading',{name:'Acceso privado'}).waitFor({timeout:12000});assert.equal(await x.locator('#candidates').innerText(),'');}
+ lab.revokeAll();for(const x of [p,q]){await x.getByRole('heading',{name:'Acceso privado'}).waitFor({timeout:12000});assert.equal(await x.locator('#candidates').innerText(),'');assert.equal(await x.locator('#doc-items').innerText(),'');}
  assert.deepEqual(errors,[]);console.log('PRIVATE_BROWSER_PASS desktop + mobile, conflict, reload, revocation, no browser storage');
 }finally{await browser.close();await lab.close();}

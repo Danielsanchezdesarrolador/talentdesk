@@ -50,6 +50,18 @@ export async function startPrivateLab({path=':memory:',initial,clock=Date.now,tt
     const id=url.slice((ROOT+'/receipts/').length);if(!/^[A-Za-z0-9-]{1,100}$/.test(id))return respond(res,400,{error:'invalid request'});
     const found=store.receipt(id);return respond(res,found?200:404,found??{error:'not found'});
    }
+   if(req.method==='GET'&&url===ROOT+'/documents')return respond(res,200,{documents:store.documents.list()});
+   if(req.method==='GET'&&url?.startsWith(ROOT+'/documents/')){
+    const id=url.slice((ROOT+'/documents/').length);if(!/^[A-Za-z0-9-]{1,100}$/.test(id))return respond(res,400,{error:'invalid request'});
+    const d=store.documents.read(id);if(!d)return respond(res,404,{error:'not found'});
+    res.writeHead(200,{'Content-Type':'application/pdf','Content-Length':d.size,'Content-Disposition':'attachment; filename="talentdesk-DEMO-'+d.id+'.pdf"','Cache-Control':'no-store, private','X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'none'; sandbox",'X-Document-SHA256':d.sha256});return res.end(d.bytes);
+   }
+   if(req.method==='POST'&&url===ROOT+'/documents'){
+    let request;try{request=await body(req,2048);}catch{return respond(res,400,{error:'invalid request'});}
+    if(session(req)!==authorized)return deny();
+    if(!request||Object.keys(request).length!==4||typeof request.requestId!=='string'||typeof request.candidateId!=='string'||!['CV','Documento'].includes(request.kind)||!Number.isSafeInteger(request.expectedRevision)||request.expectedRevision<0||!/[A-Za-z0-9-]/.test(request.requestId)||!/^[A-Za-z0-9-]{1,100}$/.test(request.candidateId)||!/^[A-Za-z0-9-]{1,100}$/.test(request.requestId))return respond(res,400,{error:'invalid request'});
+    const result=store.documents.create(request);return respond(res,result.kind==='committed'?200:result.kind==='conflict'?409:507,result);
+   }
    if(req.method==='POST'&&url===ROOT+'/revisions'){
     let request;try{request=await body(req,8_000_000);validRequest(request);}catch{return respond(res,400,{error:'invalid request'});}
     if(session(req)!==authorized)return deny();
