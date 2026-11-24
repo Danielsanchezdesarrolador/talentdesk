@@ -1,4 +1,5 @@
-export type Vacancy = { id: string; title: string; unit: string; slots: number; status: 'Activa' | 'Cerrada'; date: string };
+import type {Terms} from './catalogs.js';
+export type Vacancy = { id: string; title: string; unit: string; slots: number; status: 'Activa' | 'Cerrada'; date: string; terms?: Terms };
 export type Draft = Omit<Vacancy, 'id'>;
 export type StoragePort = Pick<Storage, 'getItem' | 'setItem'>;
 export const KEY = 'talentdesk.synthetic.v1';
@@ -10,7 +11,9 @@ export function validateDraft(d: Draft): Draft {
  if(!Number.isSafeInteger(d.slots)||d.slots<1||d.slots>999) throw new Error('Los cupos deben ser entre 1 y 999.');
  if(d.status!=='Activa'&&d.status!=='Cerrada') throw new Error('Estado inválido.');
  if(typeof d.date!=='string'||!validDate(d.date)) throw new Error('Indica una fecha válida.');
- return {title:d.title.trim(),unit:d.unit.trim(),slots:d.slots,status:d.status,date:d.date};
+ const clean:Draft={title:d.title.trim(),unit:d.unit.trim(),slots:d.slots,status:d.status,date:d.date};
+ if(d.terms!==undefined){const t=d.terms;if(!t||typeof t!=='object'||!['rateId','job','unit','schedule','employer','from'].every(k=>typeof t[k as keyof Terms]==='string'&&String(t[k as keyof Terms]).trim())||!Number.isSafeInteger(t.amount)||t.amount<1||t.amount>100000000||!validDate(t.from)||t.from>d.date||normalize(t.job)!==normalize(d.title)||normalize(t.unit)!==normalize(d.unit))throw Error('Condiciones de renta inválidas para la vacante.');clean.terms={rateId:t.rateId,job:t.job,unit:t.unit,schedule:t.schedule,employer:t.employer,amount:t.amount,from:t.from};}
+ return clean;
 }
 export function saveVacancy(rows: readonly Vacancy[], draft: Draft, id: string, editing = false): Vacancy[] {
  const d=validateDraft(draft); if(!id||rows.some(x=>x.id===id)!==editing) throw new Error('Registro no válido o ya existente.');

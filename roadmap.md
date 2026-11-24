@@ -5,7 +5,7 @@ Objetivo: gestionar vacantes, candidatos, contactos, entrevistas e ingresos desd
 |---|---|---|
 | TD-CP01 Definición | Cerrado (alcance inicial) | Alcance inicial y diseño Studio aprobados; backend real y activos finales diferidos |
 | TD-CP02 Cimientos | En curso | Primera operación persistente sintética y validación en navegador; acceso privado requerido antes de datos reales |
-| TD-CP03 Catálogos | Pendiente | Cargos, unidades, horarios, rentas y empresas editables con datos ficticios |
+| TD-CP03 Catálogos | En curso (candidato) | Cargos, unidades, jefaturas, horarios, rentas, empresas y plantillas editables con datos ficticios; condiciones asociables a vacantes |
 | TD-CP04 Vacantes | Pendiente | Crear, editar, buscar y cerrar vacantes con historial |
 | TD-CP05 Candidatos | Pendiente | Ficha única, CV sintético, postulaciones y detección de duplicados |
 | TD-CP06 Llamados | Pendiente | Cola de contactos, resultados y seguimiento |

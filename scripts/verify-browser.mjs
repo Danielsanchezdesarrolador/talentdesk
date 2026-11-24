@@ -76,6 +76,16 @@ try {
       await page.screenshot({path:'qa-output/inicio-'+viewport.width+'.png',fullPage:true});
       assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Horizontal page overflow');
       assert.deepEqual(errors,[]);
+      await nav.getByRole('button',{name:'Configuración',exact:true}).click();
+      const cat=async(kind,name)=>{await page.getByRole('button',{name:new RegExp('^'+kind+' ')}).click();await page.getByRole('button',{name:'Nuevo registro'}).click();await page.getByLabel('Nombre de catálogo').fill(name);await page.getByRole('button',{name:'Guardar registro'}).click();await page.getByRole('status').waitFor();};
+      await cat('Cargos','Cargo ficticio QA');await cat('Unidades','Unidad demo');await cat('Horarios','Horario ficticio');await cat('Empresas','Empresa ficticia');await cat('Jefaturas','Jefatura ficticia');await cat('Plantillas','Plantilla ficticia');
+      await page.getByRole('button',{name:/^Rentas /}).click();await page.getByRole('button',{name:'Nuevo registro'}).click();await page.getByLabel('Nombre de catálogo').fill('Renta ficticia');
+      for(const [label,name] of [['Cargo asociado','Cargo ficticio QA'],['Unidad asociada','Unidad demo'],['Horario asociado','Horario ficticio'],['Empresa asociada','Empresa ficticia']])await page.getByLabel(label,{exact:true}).selectOption({label:name});
+      await page.getByLabel('Renta CLP').fill('500000');await page.getByLabel('Vigente desde').fill('2026-11-01');await page.getByRole('button',{name:'Guardar registro'}).click();await page.getByRole('status').waitFor();
+      await page.screenshot({path:'qa-output/catalogos-'+viewport.width+'.png',fullPage:true});
+      await nav.getByRole('button',{name:'Vacantes',exact:true}).click();await page.getByLabel('Filtrar estado').selectOption('Todas');await newButton().click();await fill();await page.getByLabel('Renta de vacante').selectOption({index:1});await save();await page.getByRole('status').waitFor();
+      await page.reload();await nav.getByRole('button',{name:'Vacantes',exact:true}).click();const activeRow=page.getByRole('row').filter({hasText:'Cargo ficticio QA'}).filter({hasText:'Activa'});await activeRow.getByRole('button',{name:'Editar'}).click();assert.match(await page.getByText('Condiciones guardadas:',{exact:false}).innerText(),/500[. ]?000/);
+      assert.deepEqual(errors,[]);
       console.log('BROWSER_PASS '+viewport.width+'x'+viewport.height+' create duplicate edit draft navigation reload search close filters layout');
     } finally {await context.close();}
   }
