@@ -6,11 +6,11 @@ Objetivo: gestionar vacantes, candidatos, contactos, entrevistas e ingresos desd
 | TD-CP01 Definición | Cerrado (alcance inicial) | Alcance inicial y diseño Studio aprobados; backend real y activos finales diferidos |
 | TD-CP02 Cimientos | Validado técnicamente (DEMO) | Primera operación persistente sintética y validación en navegador; acceso privado requerido antes de datos reales |
 | TD-CP03 Catálogos | Validado técnicamente (DEMO) | Cargos, unidades, jefaturas, horarios, rentas, empresas y plantillas editables con datos ficticios; condiciones asociables a vacantes |
-| TD-CP04 Vacantes | Candidato publicado | Crear, editar, buscar y cerrar vacantes con historial |
-| TD-CP05 Candidatos | Candidato publicado | Ficha única, CV sintético, postulaciones y detección de duplicados |
-| TD-CP06 Llamados | Candidato publicado | Cola de contactos, resultados y seguimiento |
-| TD-CP07 Entrevistas | Pendiente | Agenda, asistencia, feedback y decisión humana |
-| TD-CP08 Ingresos | Pendiente | Autocompletar condiciones, elegir empresa, generar fila y borrador de correo |
+| TD-CP04 Vacantes | Validado técnicamente (DEMO) | Crear, editar, buscar y cerrar vacantes con historial |
+| TD-CP05 Candidatos | Validado técnicamente (DEMO) | Ficha única, CV sintético, postulaciones y detección de duplicados |
+| TD-CP06 Llamados | Validado técnicamente (DEMO) | Cola de contactos, resultados y seguimiento |
+| TD-CP07 Entrevistas | Candidato publicado | Agenda, asistencia, feedback y decisión humana |
+| TD-CP08 Ingresos | Candidato publicado | Autocompletar condiciones, elegir empresa, generar fila y borrador de correo |
 | TD-CP09 Automatización | Pendiente | Flujos autorizados con pruebas sintéticas, conciliación y control de duplicados |
 | TD-CP10 Documentos | Pendiente | Seguimiento documental e historial |
 | TD-CP11 Indicadores | Pendiente | Dashboard y reportes calculados desde registros |

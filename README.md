@@ -1,7 +1,7 @@
 # TalentDesk 1.0
 Gestiona talento, impulsa equipos.
 
-Herramienta web/PWA monousuario para organizar procesos de reclutamiento. Dirección visual Studio. Candidato DEMO 0.1.0: Inicio, Vacantes y Configuración validados en DEMO anterior; ampliación de Vacantes, Candidatos y Centro de llamados como candidato pendiente de CI; otros módulos planificados. PWA instalable y autenticación pendientes.
+Herramienta web/PWA monousuario para organizar procesos de reclutamiento. Dirección visual Studio. Candidato DEMO 0.1.0: Inicio, Vacantes, Configuración, Candidatos y Centro de llamados validados en DEMO anterior; Entrevistas e Ingresos como candidato pendiente de CI; otros módulos planificados. PWA instalable y autenticación pendientes.
 
 Este repositorio público contiene solo código genérico, documentación pública y ejemplos sintéticos. No debe contener datos personales reales, documentación laboral confidencial ni secretos. El uso real requiere autorización institucional y un entorno aprobado. La DEMO almacena datos ficticios solo en el navegador; no sincroniza ni protege datos mediante autenticación.
 
