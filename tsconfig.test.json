@@ -22,6 +22,7 @@
     "src/productivity.ts",
     "src/adminAutomation.ts",
     "src/encryptedBackup.ts",
-    "src/revisionSync.ts"
+    "src/revisionSync.ts",
+    "src/localWorkflows.ts"
   ]
 }
