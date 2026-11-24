@@ -17,3 +17,16 @@ Objetivo: gestionar vacantes, candidatos, contactos, entrevistas e ingresos desd
 | TD-CP12 PWA | CI PASS; LIVE reportado, aceptación pendiente | Prueba física, recuperación y aceptación según alcance autorizado |
 
 MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrador de correo, sin depender de integraciones externas. React/TypeScript/Vite para DEMO local; backend real por decidir. Integraciones Microsoft sujetas a permisos y licencias. No publicar datos reales ni recursos privados.
+
+## Optimización Smart — roadmap maestro
+| Bloque | Estado | Resultado esperado |
+|---|---|---|
+| TD-R01 Investigación | Base documental inicial | Patrones ATS y selección tecnológica; sin copiar código externo |
+| TD-R02 Autocompletado | Candidato | Vacantes rápidas, reutilización y lectura asistida de texto |
+| TD-R03 Importación | Pendiente | CSV/Excel, PDF/OCR y revisión masiva |
+| TD-R04 Studio | Pendiente | Diseño compacto, navegación y búsqueda |
+| TD-R05 Productividad | Pendiente | Cola y acciones administrativas por eventos |
+| TD-R06 Ingresos | Pendiente | Condiciones, plantillas y documentos |
+| TD-R07 Datos privados | Pendiente | Entorno autorizado y recuperación |
+| TD-R08 Microsoft | Pendiente | Integraciones autorizadas |
+| TD-R09 Optimización | Pendiente | Medición real de tiempos y aceptación |

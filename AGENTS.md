@@ -6,3 +6,5 @@
 - Separar desarrollo, commit, publicación, CI, despliegue y aceptación. Codex solo ante necesidades concretas.
 - Antes de datos reales: autorización institucional, entorno aprobado, identidad privada, autorización servidor, HTTPS, recuperación proporcional, retención y eliminación. No guardar información confidencial en cachés PWA.
 - Actualizar agent.md, roadmap.md y checkpoint por entrega; conservar evidencia sanitizada y no inventar resultados.
+
+- Dirección funcional y técnica delegada al asistente; propietario conserva decisiones de uso real, gastos, permisos e infraestructura/despliegue. Priorizar reducir digitación y conservar decisión humana de selección; medir mejoras sin presentar objetivos como resultados. Entregas amplias, sin reconstruir.

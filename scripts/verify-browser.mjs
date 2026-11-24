@@ -217,6 +217,22 @@ try {
       const fresh=await browser.newContext({viewport});
       try{const p=await fresh.newPage();await p.goto(base);await p.getByRole('navigation',{name:'Módulos'}).getByRole('button',{name:'Configuración',exact:true}).click();await p.getByLabel('Archivo JSON de respaldo').setInputFiles(backupPath);await p.getByText('Respaldo validado:',{exact:false}).waitFor();await p.getByRole('checkbox',{name:/Confirmo que este perfil/}).check();await p.getByRole('button',{name:'Restaurar respaldo DEMO'}).click();await p.getByRole('heading',{name:'Resumen de hoy'}).waitFor();await p.getByRole('navigation',{name:'Módulos'}).getByRole('button',{name:'Ingresos',exact:true}).click();assert.ok(await p.getByText('Persona Ficticia QA',{exact:true}).isVisible());await p.getByRole('navigation',{name:'Módulos'}).getByRole('button',{name:'Documentos',exact:true}).click();assert.ok(await p.getByText('Documento ficticio QA',{exact:true}).isVisible());}finally{await fresh.close();}
       await page.screenshot({path:'qa-output/respaldo-'+viewport.width+'.png',fullPage:true});
+      await nav.getByRole('button',{name:'Vacantes',exact:true}).click();
+      await newButton().click();
+      assert.match(await page.getByLabel('Fecha de solicitud',{exact:true}).inputValue(),/^\d{4}-\d{2}-\d{2}$/);
+      await page.getByLabel('Proceso anterior').selectOption({index:1});
+      await page.getByRole('button',{name:'Reutilizar vacante'}).click();
+      assert.equal(await page.getByLabel('Cargo',{exact:true}).inputValue(),'Cargo ficticio QA');
+      assert.equal(await page.getByLabel('Cupos cubiertos',{exact:true}).inputValue(),'0');
+      await page.getByText('Interpretar solicitud de texto',{exact:true}).click();
+      await page.getByLabel('Solicitud ficticia').fill('Cargo ficticio QA. Unidad demo. Cupos: 4.');
+      await page.getByRole('button',{name:'Analizar solicitud'}).click();
+      await page.getByRole('button',{name:'Aplicar sugerencias'}).click();
+      assert.equal(await page.getByLabel('Cupos',{exact:true}).inputValue(),'4');
+      await page.getByLabel('Fecha de solicitud',{exact:true}).fill('2026-11-24');
+      assert.notEqual(await page.getByLabel('Renta de vacante').inputValue(),'');
+      await page.screenshot({path:'qa-output/vacante-inteligente-'+viewport.width+'.png',fullPage:true});
+      await page.getByRole('button',{name:'Cancelar',exact:true}).click();
       assert.deepEqual(errors,[]);
       console.log('BROWSER_PASS '+viewport.width+'x'+viewport.height+' create duplicate edit draft navigation reload search close filters layout');
     } finally {await context.close();}

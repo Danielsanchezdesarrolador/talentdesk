@@ -1,0 +1,17 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {freshVacancy,uniqueTerms,changeContext,duplicateVacancy,readRequest,applyRequest} from '../.test-build/smartVacancies.js';
+import {blank,saveEntry} from '../.test-build/catalogs.js';
+import {saveVacancyWithHistory} from '../.test-build/vacancies.js';
+const day='2026-11-24',at=day+'T12:00:00Z';
+const basic=[['Cargos','Cargo demo','c'],['Unidades','Unidad demo','u'],['Jefaturas','Jefatura demo','j'],['Horarios','Horario demo','h'],['Empresas','Empresa demo','e']].reduce((rows,[kind,name,id])=>saveEntry(rows,{...blank(kind),name},id),[]);
+const rate={...blank('Rentas'),name:'Renta demo',jobId:'c',unitId:'u',scheduleId:'h',employerId:'e',amount:500000,from:'2026-11-01'};
+const catalog=saveEntry(basic,rate,'r');
+const draft={...freshVacancy(day),title:'Cargo demo',unit:'Unidad demo',manager:'Jefatura demo'};
+test('nueva vacante precarga fecha y estado sin historial',()=>assert.deepEqual(freshVacancy(day),{title:'',unit:'',slots:1,status:'Activa',date:day,covered:0}));
+test('sugiere única renta vigente, nunca futura ni ambigua',()=>{assert.equal(uniqueTerms(catalog,draft).amount,500000);assert.equal(uniqueTerms(catalog,{...draft,date:'2026-10-01'}),undefined);const b=saveEntry(catalog,{...blank('Horarios'),name:'Otro horario'},'h2');const a=saveEntry(b,{...rate,name:'Otra renta',scheduleId:'h2'},'r2');assert.equal(uniqueTerms(a,draft),undefined)});
+test('cambio de unidad limpia jefatura previa y renta incompatible',()=>{const d=changeContext(catalog,{...draft,terms:uniqueTerms(catalog,draft)},{unit:'Otra'},true);assert.equal(d.manager,'');assert.equal(d.terms,undefined)});
+test('edición no reaplica renta automática',()=>assert.equal(changeContext(catalog,draft,{date:day},false).terms,undefined));
+test('duplicar reinicia cobertura estado fecha e historial y actualiza renta vigente',()=>{const v=saveVacancyWithHistory([],{...draft,covered:1,status:'Cerrada',terms:uniqueTerms(catalog,draft)},'v',false,at)[0];const newer=saveEntry(catalog,{...rate,amount:600000},'r',true);const d=duplicateVacancy(v,newer,'2026-11-25');assert.equal(d.covered,0);assert.equal(d.status,'Activa');assert.equal(d.history,undefined);assert.equal(d.date,'2026-11-25');assert.equal(d.terms.amount,600000);assert.equal(v.terms.amount,500000)});
+test('interpreta catálogo y cupos explícitos sin inferir fecha',()=>{const h=readRequest('Cargo demo, Unidad demo, Jefatura demo. Cupos: 2. Ingreso 12 de diciembre.',catalog);assert.deepEqual(h.patch,{title:'Cargo demo',unit:'Unidad demo',manager:'Jefatura demo',slots:2});const d=applyRequest(catalog,freshVacancy(day),h);assert.equal(d.date,day);assert.equal(d.terms.amount,500000)});
+test('ambiguos y coincidencias parciales no se seleccionan',()=>{const c=saveEntry(catalog,{...blank('Cargos'),name:'Otro cargo'},'c2');const h=readRequest('Cargo demo y Otro cargo. Unidad demoextra. Cupos: 2; 3 cupos.',c);assert.equal(h.patch.title,undefined);assert.equal(h.patch.unit,undefined);assert.equal(h.patch.slots,undefined);assert.ok(h.warnings.length>=3)});
+test('texto vacío y sobredimensionado se rechaza; análisis no modifica catálogo',()=>{assert.throws(()=>readRequest('',catalog));assert.throws(()=>readRequest('a'.repeat(10001),catalog));const before=JSON.stringify(catalog);readRequest('Cargo demo',catalog);assert.equal(JSON.stringify(catalog),before)});
