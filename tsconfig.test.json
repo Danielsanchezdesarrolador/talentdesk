@@ -29,6 +29,7 @@
     "src/communications.ts",
     "src/communicationHistory.ts",
     "src/processWorkspace.ts",
-    "src/payrollExport.ts"
+    "src/payrollExport.ts",
+    "src/privateTransport.ts"
   ]
 }
