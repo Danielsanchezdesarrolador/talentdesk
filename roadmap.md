@@ -9,11 +9,11 @@ Objetivo: gestionar vacantes, candidatos, contactos, entrevistas e ingresos desd
 | TD-CP04 Vacantes | Validado técnicamente (DEMO) | Crear, editar, buscar y cerrar vacantes con historial |
 | TD-CP05 Candidatos | Validado técnicamente (DEMO) | Ficha única, CV sintético, postulaciones y detección de duplicados |
 | TD-CP06 Llamados | Validado técnicamente (DEMO) | Cola de contactos, resultados y seguimiento |
-| TD-CP07 Entrevistas | Candidato publicado | Agenda, asistencia, feedback y decisión humana |
-| TD-CP08 Ingresos | Candidato publicado | Autocompletar condiciones, elegir empresa, generar fila y borrador de correo |
-| TD-CP09 Automatización | Pendiente | Flujos autorizados con pruebas sintéticas, conciliación y control de duplicados |
-| TD-CP10 Documentos | Pendiente | Seguimiento documental e historial |
-| TD-CP11 Indicadores | Pendiente | Dashboard y reportes calculados desde registros |
+| TD-CP07 Entrevistas | Validado técnicamente (DEMO) | Agenda, asistencia, feedback y decisión humana |
+| TD-CP08 Ingresos | Validado técnicamente (DEMO) | Autocompletar condiciones, elegir empresa, generar fila y borrador de correo |
+| TD-CP09 Automatización | Candidato local; integración pendiente | PA-01/02 preparación y simulación, siete flujos restantes planificados; integración real requiere autorización |
+| TD-CP10 Documentos | Candidato publicado | Seguimiento documental e historial |
+| TD-CP11 Indicadores | Candidato publicado | Dashboard y reportes calculados desde registros |
 | TD-CP12 PWA | Pendiente | Prueba física, recuperación y aceptación según alcance autorizado |
 
 MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrador de correo, sin depender de integraciones externas. React/TypeScript/Vite para DEMO local; backend real por decidir. Integraciones Microsoft sujetas a permisos y licencias. No publicar datos reales ni recursos privados.
