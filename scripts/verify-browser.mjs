@@ -427,6 +427,56 @@ try {
       await page.getByText('2 de 2 borradores históricos',{exact:true}).waitFor();
       await page.getByLabel('Tipo de historial de comunicaciones').selectOption('Ingreso EST');
       await page.getByText('0 de 2 borradores históricos',{exact:true}).waitFor();
+      // Two previously reprogrammed candidates: complete phone details, record manual decision, prepare batch.
+      await nav.getByRole('button',{name:'Candidatos',exact:true}).click();
+      for(const [code,phone] of [['DEMO-PDF','000000071'],['DEMO-PEGADA','000000072']]){
+        await page.getByRole('row').filter({hasText:code}).getByRole('button',{name:'Ver ficha'}).click();
+        await page.getByRole('button',{name:'Editar ficha'}).click();
+        await page.getByLabel('Teléfono ficticio',{exact:true}).fill(phone);
+        await page.getByRole('button',{name:'Guardar candidato'}).click();
+        await page.getByText('Candidato guardado.',{exact:true}).waitFor();
+      }
+      await nav.getByRole('button',{name:'Entrevistas',exact:true}).click();
+      for(const name of ['Persona PDF','Persona Pegada']){
+        await page.locator('.recent').filter({hasText:name}).getByRole('button',{name:'Editar entrevista'}).click();
+        await page.getByLabel('Asistencia').selectOption('Realizada');
+        await page.getByLabel('Feedback de entrevista').fill('Feedback QA sintético');
+        await page.getByLabel('Decisión del reclutador').selectOption('Seleccionado');
+        await page.getByRole('button',{name:'Guardar entrevista'}).click();
+        await page.getByText('Entrevista guardada.',{exact:true}).waitFor();
+      }
+      await nav.getByRole('button',{name:'Ingresos',exact:true}).click();
+      await page.getByRole('button',{name:'Abrir operaciones masivas'}).click();
+      await page.getByLabel('Fecha común de ingreso').fill('2026-11-28');
+      await page.getByRole('button',{name:'Recuperar seleccionados'}).click();
+      await page.getByLabel('Jefatura común del lote').fill('Jefatura ficticia');
+      await page.getByLabel('Correo común del lote').fill('est-lote@example.invalid');
+      await page.getByRole('button',{name:'Aplicar datos comunes a seleccionados'}).click();
+      await page.getByRole('button',{name:'Validar ingresos en lote'}).click();
+      await page.getByText('2 ingresos válidos para preparar.',{exact:true}).waitFor();
+      await page.getByRole('button',{name:'Guardar ingresos en lote'}).click();
+      await page.getByText('2 ingresos preparados en lote. No enviados.',{exact:true}).waitFor();
+      await page.reload();await nav.getByRole('button',{name:'Ingresos',exact:true}).click();
+      for(const name of ['Persona PDF','Persona Pegada'])assert.match(await page.locator('.recent').filter({hasText:name}).innerText(),/Preparado/);
+      await page.getByRole('button',{name:'Abrir operaciones masivas'}).click();
+      await page.getByRole('button',{name:'Seleccionar ingresos visibles'}).click();
+      await page.getByRole('button',{name:'Vista previa filas Excel'}).click();
+      const lines=(await page.getByLabel('Filas Excel del lote').inputValue()).split('\n');assert.equal(lines.length,2);assert.ok(lines.every(l=>l.split('\t').length===11));
+      await page.screenshot({path:'qa-output/ingresos-lote-completo-'+viewport.width+'.png',fullPage:true});
+      // OCR fixture generated in the browser, no actual CV.
+      await nav.getByRole('button',{name:'Configuración',exact:true}).click();
+      await page.getByRole('checkbox',{name:'Confirmo que todos los archivos son ficticios.'}).check();
+      const raster=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=1500;c.height=700;const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.fillStyle='#000';ctx.font='bold 42px Arial';['Nombre: Persona','Apellido: Escaneo','Codigo DEMO: DEMO-OCR','Correo: ocr@example.invalid','Telefono: 000000099'].forEach((line,i)=>ctx.fillText(line,50,90+i*100));return c.toDataURL('image/png').split(',')[1];});
+      const external=[];const watch=req=>{if(/^https?:/.test(req.url())&&!req.url().startsWith(base+'/'))external.push(req.url());};context.on('request',watch);
+      await context.route('**/*',route=>/^https?:/.test(route.request().url())&&!route.request().url().startsWith(base+'/')?route.abort():route.continue());
+      await page.getByLabel('CV escaneado ficticio OCR').setInputFiles({name:'escaneo-demo.png',mimeType:'image/png',buffer:Buffer.from(raster,'base64')});
+      await page.getByText(/escaneo-demo\.png ·/).waitFor({timeout:90000});
+      await page.getByText(/escaneo-demo\.png ·/).click();
+      assert.match(await page.getByLabel('escaneo-demo.png Nombre',{exact:true}).inputValue(),/Persona/i);
+      assert.match(await page.getByLabel('escaneo-demo.png Apellido',{exact:true}).inputValue(),/Escaneo/i);
+      assert.equal(await page.getByLabel('escaneo-demo.png Código DEMO',{exact:true}).inputValue(),'DEMO-OCR');
+      assert.deepEqual(external,[]);context.off('request',watch);await context.unroute('**/*');
+      await page.screenshot({path:'qa-output/ocr-'+viewport.width+'.png',fullPage:true});
       assert.deepEqual(errors,[]);
       console.log('BROWSER_PASS '+viewport.width+'x'+viewport.height+' create duplicate edit draft navigation reload search close filters layout');
     } finally {await context.close();}

@@ -26,3 +26,5 @@ uploads/
 .test-build/
 
 qa-output/
+
+/public/ocr/

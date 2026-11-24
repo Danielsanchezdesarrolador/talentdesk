@@ -7,13 +7,18 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "test": "tsc -p tsconfig.test.json && node --test tests/*.test.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prebuild": "node scripts/prepare-ocr-assets.mjs",
+    "predev": "node scripts/prepare-ocr-assets.mjs"
   },
   "dependencies": {
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "pdfjs-dist": "6.5.438",
-    "read-excel-file": "9.3.20"
+    "read-excel-file": "9.3.20",
+    "tesseract.js": "6.0.1",
+    "tesseract.js-core": "6.0.0",
+    "@tesseract.js-data/spa": "1.0.0"
   },
   "devDependencies": {
     "@types/react": "19.1.12",

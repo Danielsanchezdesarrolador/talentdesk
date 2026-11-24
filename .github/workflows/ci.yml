@@ -26,10 +26,17 @@ jobs:
           else
             npm install --no-audit --no-fund
           fi
+      - name: Dependency audit (report only; no automatic upgrades)
+        run: |
+          npm audit --json > "$RUNNER_TEMP/talentdesk-audit.json" || true
+          node -e 'const a=require(process.env.RUNNER_TEMP+"/talentdesk-audit.json"); console.log("TD_AUDIT", JSON.stringify({counts:a.metadata?.vulnerabilities??null,error:a.error?.code??null,packages:Object.keys(a.vulnerabilities??{})}));'
       - name: Domain tests
         run: npm test
       - name: Typecheck and build
         run: npm run build
+      - name: Lockfile transfer evidence (public dependency metadata only)
+        run: |
+          node --input-type=module -e 'import fs from "node:fs";import crypto from "node:crypto";const b=fs.readFileSync("package-lock.json"),p=JSON.parse(b);for(const v of Object.values(p.packages)){if(v.resolved && !v.resolved.startsWith("https://registry.npmjs.org/"))throw Error("Unexpected registry");}console.log("TD_LOCK_SHA "+crypto.createHash("sha256").update(b).digest("hex"));const s=b.toString("base64");for(let i=0;i<s.length;i+=2000)console.log("TD_LOCK "+i+" "+s.slice(i,i+2000));'
       - name: Preserve resolved lockfile
         uses: actions/upload-artifact@v4
         with:
