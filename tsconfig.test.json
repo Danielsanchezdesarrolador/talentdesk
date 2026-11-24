@@ -17,6 +17,7 @@
     "src/selection.ts",
     "src/operations.ts",
     "src/backup.ts",
-    "src/smartVacancies.ts"
+    "src/smartVacancies.ts",
+    "src/imports.ts"
   ]
 }

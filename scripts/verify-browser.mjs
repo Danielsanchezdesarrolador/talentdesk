@@ -233,6 +233,28 @@ try {
       assert.notEqual(await page.getByLabel('Renta de vacante').inputValue(),'');
       await page.screenshot({path:'qa-output/vacante-inteligente-'+viewport.width+'.png',fullPage:true});
       await page.getByRole('button',{name:'Cancelar',exact:true}).click();
+      await nav.getByRole('button',{name:'Configuración',exact:true}).click();
+      await page.getByRole('checkbox',{name:/Confirmo que todos los archivos/}).check();
+      await page.getByLabel('Archivo de importación').setInputFiles({name:'candidatos-demo.csv',mimeType:'text/csv',buffer:Buffer.from('Nombre;Apellido;Código DEMO;Correo;Teléfono\nPersona;Importada;DEMO-IMPORT;import@example.invalid;000000009')});
+      await page.getByRole('button',{name:'Preparar revisión'}).click();
+      await page.getByRole('button',{name:'Validar lote'}).click();
+      await page.getByText('1 válidos · 0 observados.',{exact:false}).waitFor();
+      await page.getByRole('button',{name:'Importar seleccionados'}).click();
+      await page.getByText('1 registros importados.',{exact:true}).waitFor();
+      await nav.getByRole('button',{name:'Candidatos',exact:true}).click();
+      assert.ok(await page.getByText('Persona Importada',{exact:true}).isVisible());
+      await nav.getByRole('button',{name:'Configuración',exact:true}).click();
+      await page.getByRole('checkbox',{name:/Confirmo que todos los archivos/}).check();
+      const pdfText='BT /F1 12 Tf 40 750 Td (Nombre: Persona) Tj 0 -20 Td (Apellido: PDF) Tj 0 -20 Td (Codigo DEMO: DEMO-PDF) Tj 0 -20 Td (Correo: pdf@example.invalid) Tj ET';
+      const objs=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>','<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>','<< /Length '+pdfText.length+' >>\nstream\n'+pdfText+'\nendstream'];
+      let pdf='%PDF-1.4\n';const offsets=[0];for(const [i,obj] of objs.entries()){offsets.push(pdf.length);pdf+=(i+1)+' 0 obj\n'+obj+'\nendobj\n';}const xref=pdf.length;pdf+='xref\n0 6\n0000000000 65535 f \n'+offsets.slice(1).map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+'trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF\n';
+      await page.getByLabel('CV PDF ficticios').setInputFiles({name:'cv-demo.pdf',mimeType:'application/pdf',buffer:Buffer.from(pdf)});
+      await page.getByText('Revisar 1 registros',{exact:true}).waitFor({timeout:30000});
+      await page.getByText('cv-demo.pdf · Persona PDF · Incluido',{exact:true}).click();
+      assert.equal(await page.getByLabel('cv-demo.pdf Código DEMO').inputValue(),'DEMO-PDF');
+      await page.getByRole('button',{name:'Importar seleccionados'}).click();
+      await page.getByText('1 registros importados.',{exact:true}).waitFor();
+      await page.screenshot({path:'qa-output/importacion-'+viewport.width+'.png',fullPage:true});
       assert.deepEqual(errors,[]);
       console.log('BROWSER_PASS '+viewport.width+'x'+viewport.height+' create duplicate edit draft navigation reload search close filters layout');
     } finally {await context.close();}
