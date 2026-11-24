@@ -1,0 +1,4 @@
+# Arquitectura candidata
+Frontend React + TypeScript + Vite, adaptable a escritorio y móvil/PWA. Separar dominio, UI, persistencia e integraciones. Backend definitivo pendiente: valorar almacenamiento institucional autorizado frente a backend propio. DEMO exclusivamente sintética.
+Modelo conceptual: candidato único, vacante, postulación, CV referenciado, contactos, entrevistas, ingreso, documentos, catálogos, tareas e historial de automatización. Una persona puede participar en varias vacantes; estados por postulación. Empresa de contratación seleccionable y renta/horario según catálogo vigente; conservar condiciones históricas. Decisión de selección humana.
+Primera entrega funcional propuesta: crear y recuperar una entidad sintética, incluyendo validación, edición, persistencia tras recarga, control de duplicados y errores. Integraciones externas desactivadas.
