@@ -26,6 +26,13 @@ export async function startPrivateLab({path=':memory:',initial,clock=Date.now,tt
    if(!['GET','POST'].includes(req.method))return respond(res,405,{error:'method'});
    if(req.method==='POST'&&(req.headers.origin!==origin||req.headers['content-type']!=='application/json'))return respond(res,403,{error:'denied'});
    const url=req.url;
+   if(ui&&req.method==='GET'&&(url==='/ats'||url?.startsWith('/ats-assets/'))){
+    const relative=url==='/ats'?'private-lab/ats.html':url.slice('/ats-assets/'.length);
+    if(url!=='/ats'&&(!/^(assets|ocr)\/[A-Za-z0-9_.\/-]+$/.test(relative)||relative.split('/').some(p=>p==='.'||p==='..'||!p)))return respond(res,404,{error:'not found'});
+    const ext=relative.slice(relative.lastIndexOf('.')+1),types={html:'text/html; charset=utf-8',js:'text/javascript; charset=utf-8',mjs:'text/javascript; charset=utf-8',css:'text/css; charset=utf-8',wasm:'application/wasm',gz:'application/octet-stream',bcmap:'application/octet-stream',pfb:'application/octet-stream',ttf:'font/ttf',woff2:'font/woff2',icc:'application/octet-stream',png:'image/png'};
+    let asset;try{asset=await readFile(new URL('../.private-build/'+relative,import.meta.url));}catch{return respond(res,404,{error:'not found'});}
+    res.writeHead(200,{'Content-Type':types[ext]??'application/octet-stream','Cache-Control':'no-store, private','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Content-Security-Policy':"default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self'; worker-src 'self' blob:; img-src 'self' data: blob:; font-src 'self' data: blob:; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"});return res.end(asset);
+   }
    if(ui&&req.method==='GET'){
     const known={'/':['./index.html','text/html; charset=utf-8'],'/lab.css':['./lab.css','text/css; charset=utf-8'],'/lab.mjs':['./lab.mjs','text/javascript; charset=utf-8']};
     const module=url?.match(/^\/modules\/([A-Za-z][A-Za-z0-9]*\.js)$/);

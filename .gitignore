@@ -28,3 +28,5 @@ uploads/
 qa-output/
 
 /public/ocr/
+
+.private-build/

@@ -45,7 +45,7 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 
 | Bloque A Smart Premium | Cerrado técnicamente (DEMO) | Lockfile, npm ci, auditoría, OCR PNG/PDF y navegador PASS; aceptación visual/física pendiente |
 | Bloque B Flujo integral | Cerrado técnicamente (DEMO) | Espacio por vacante con siete pestañas y operaciones existentes acotadas; CI PASS |
-| Bloque C Private | En desarrollo; bloqueado para datos reales | C01-C03 validados en laboratorio; C04/C05 candidatos; proveedor/identidad institucional y UI ATS completa pendientes |
+| Bloque C Private | En desarrollo; bloqueado para datos reales | C01-C05 validados en laboratorio; C06 integración ATS candidata; entorno/identidad institucional pendientes |
 | Bloque D Microsoft | Pendiente | Permisos, licencias y flujos reales |
 | Bloque E Piloto | Pendiente | Aceptación y medición |
 
@@ -59,4 +59,6 @@ A/B cerrados técnicamente al SHA 96ebbd9d7bba55df6895aece845ffbe53fd229c3; REM0
 
 | TD-C02/C03 Acceso y sincronización | Validado técnicamente (local sintético) | UI aislada con generación de candidato, revisión compartida y conflictos; CI PASS |
 
-| TD-C04/C05 Documentos y recuperación | Candidato | Original PDF sintético inmutable, integridad, respaldo cifrado cerrado y restauración; CI pendiente |
+| TD-C04/C05 Documentos y recuperación | Validado técnicamente (local sintético) | Original PDF sintético inmutable, integridad, respaldo cifrado cerrado y restauración; CI PASS |
+
+| TD-C06 Integración privada ATS | Candidato local | Nueve módulos compartidos con puerto de memoria y revisión servidor; CI pendiente. Piloto real bloqueado |

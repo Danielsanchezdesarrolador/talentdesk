@@ -17,6 +17,7 @@ export function privateWorkspace(api:API,notify:(v:PrivateView)=>void,id=()=>cry
  async function result(g:number,r:SyncResult){if(!current(g))return;if(r.kind==='denied'){lock('Acceso revocado.');return;}await api.session();if(!current(g))return;if(r.kind==='confirmed')accept(r.snapshot,'Revisión confirmada por el servidor.');else if(r.kind==='conflict')patch({phase:'conflict',pending:null,message:'Otra sesión guardó primero. Tu borrador no se sobrescribió. Descarta el borrador para recuperar la versión actual.'});else patch({phase:'uncertain',message:'Resultado incierto. Consulta el recibo; no se repetirá la escritura.'});}
  return {
   view:()=>v,lock,
+  stage:(raw:string)=>{if(v.busy||v.phase!=='ready'||!v.snapshot)throw Error('El espacio privado no está disponible para editar.');inspectBackup(raw);patch({draft:raw,message:'Cambios en memoria. Pendientes de guardar en servidor.'});},
   resume:()=>run(async g=>{if(v.phase!=='locked')return;await load(g);}),
   login:(secret:string)=>run(async g=>{if(v.phase!=='locked')return;await api.login(secret);if(current(g))await load(g);}),
   check:()=>run(async g=>{if(v.phase==='locked')return;await api.session();if(!current(g))return;}),
