@@ -121,6 +121,12 @@ try {
       await page.getByLabel('Entrevistador').fill('Jefatura ficticia');
       await page.getByRole('button',{name:'Guardar entrevista'}).click();
       await page.getByRole('status').waitFor();
+      await page.getByRole('button',{name:'Preparar citación'}).click();
+      assert.match(await page.getByLabel('Borrador de citación').inputValue(),/NO ENVIAR/);
+      const icsDownload=page.waitForEvent('download');
+      await page.getByRole('button',{name:'Descargar calendario ICS'}).click();
+      assert.equal((await icsDownload).suggestedFilename(),'entrevista-DEMO.ics');
+      await page.getByRole('button',{name:'Cerrar citación'}).click();
       await page.getByRole('button',{name:'Editar entrevista'}).click();
       await page.getByLabel('Asistencia').selectOption('Realizada');
       await page.getByLabel('Evaluación',{exact:true}).selectOption('Completada');
@@ -305,6 +311,16 @@ try {
       await nav.getByRole('button',{name:'Inicio',exact:true}).click();
       assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Studio horizontal page overflow');
       await page.screenshot({path:'qa-output/studio-'+viewport.width+'.png',fullPage:true});
+      await nav.getByRole('button',{name:'Ingresos',exact:true}).click();
+      await page.getByRole('button',{name:'Abrir operaciones masivas'}).click();
+      await page.getByLabel('Estado de exportación').selectOption('Confirmado DEMO');
+      await page.getByRole('button',{name:'Seleccionar ingresos visibles'}).click();
+      await page.getByRole('button',{name:'Vista previa filas Excel'}).click();
+      assert.equal((await page.getByLabel('Filas Excel del lote').inputValue()).split('\t').length,11);
+      const csvDownload=page.waitForEvent('download');
+      await page.getByRole('button',{name:'Descargar lote CSV'}).click();
+      assert.equal((await csvDownload).suggestedFilename(),'ingresos-lote-DEMO.csv');
+      await page.screenshot({path:'qa-output/ingresos-masivos-'+viewport.width+'.png',fullPage:true});
       assert.deepEqual(errors,[]);
       console.log('BROWSER_PASS '+viewport.width+'x'+viewport.height+' create duplicate edit draft navigation reload search close filters layout');
     } finally {await context.close();}
