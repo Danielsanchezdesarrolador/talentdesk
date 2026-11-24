@@ -1,0 +1,11 @@
+import {pendingCalls,type Recruitment} from './recruitment.js';
+import {effectiveStatus,eligibleInterviews,eligibleHires,totalCovered} from './selection.js';
+import type {Vacancy} from './vacancies.js';
+import type {Operations} from './operations.js';
+export function inProcess(state:Recruitment,scope:string|undefined,applicationId:string){return !scope||state.applications.some(a=>a.id===applicationId&&a.vacancyId===scope);}
+export function processSummary(v:Vacancy,state:Recruitment,ops:Operations,today:string){
+ const apps=state.applications.filter(a=>a.vacancyId===v.id),ids=new Set(apps.map(a=>a.id));
+ const interviews=state.interviews.filter(i=>ids.has(i.applicationId)),hires=state.hires.filter(h=>ids.has(h.applicationId)),docs=ops.documents.filter(d=>ids.has(d.applicationId)),contacts=state.contacts.filter(c=>ids.has(c.applicationId)),covered=totalCovered(state,v);
+ return {apps,interviews,hires,docs,contacts,covered,pending:Math.max(0,v.slots-covered),called:new Set(contacts.map(c=>c.applicationId)).size,callQueue:pendingCalls(state,[v],today).length,toSchedule:eligibleInterviews(state,[v]).length,toHire:eligibleHires(state,[v]).length,selected:interviews.filter(i=>i.decision==='Seleccionado').length,scheduled:interviews.filter(i=>i.attendance==='Programada').length,confirmed:hires.filter(h=>h.status==='Confirmado DEMO').length,docPending:docs.filter(d=>d.status==='Pendiente').length,docOverdue:docs.filter(d=>d.status==='Pendiente'&&d.due<today).length,rows:apps.map(a=>({a,c:state.candidates.find(c=>c.id===a.candidateId),status:effectiveStatus(state,a),contacts:contacts.filter(c=>c.applicationId===a.id).length,docs:docs.filter(d=>d.applicationId===a.id&&d.status==='Pendiente').length}))};
+}
+export function processReport(v:Vacancy,state:Recruitment,ops:Operations,today:string){const s=processSummary(v,state,ops,today);return ['TalentDesk · Reporte de vacante DEMO',v.title+' · '+v.unit,'Fecha de corte: '+today,'Estado: '+v.status,'Cobertura: '+s.covered+'/'+v.slots,'Postulaciones: '+s.apps.length,'Contactados únicos: '+s.called,'Pendientes de llamado: '+s.callQueue,'Entrevistas programadas: '+s.scheduled,'Seleccionados: '+s.selected,'Documentos pendientes: '+s.docPending,'Ingresos confirmados DEMO: '+s.confirmed,'Sin envío externo.'].join('\n');}

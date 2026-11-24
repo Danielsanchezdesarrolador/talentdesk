@@ -464,6 +464,23 @@ try {
       await page.getByRole('button',{name:'Vista previa filas Excel'}).click();
       const lines=(await page.getByLabel('Filas Excel del lote').inputValue()).split('\n');assert.equal(lines.length,2);assert.ok(lines.every(l=>l.split('\t').length===11));console.log('BULK_INCOME_PASS '+viewport.width+' '+lines.length+' rows');
       await page.screenshot({path:'qa-output/ingresos-lote-completo-'+viewport.width+'.png',fullPage:true});
+      await nav.getByRole('button',{name:'Vacantes',exact:true}).click();
+      await page.getByRole('row').filter({hasText:'Cargo ficticio QA'}).filter({hasText:'Activa'}).getByRole('button',{name:'Abrir proceso'}).click();
+      const processPanel=page.getByRole('region',{name:'Espacio integral de vacante'});
+      await processPanel.getByRole('heading',{name:'Cargo ficticio QA',exact:true}).waitFor();
+      await processPanel.getByRole('tab',{name:'Postulantes',exact:true}).click();
+      await processPanel.getByRole('row').filter({hasText:'DEMO-PDF'}).waitFor();
+      await processPanel.getByRole('tab',{name:'Ingresos',exact:true}).click();
+      await processPanel.getByRole('button',{name:'Ver ingreso',exact:true}).first().waitFor();
+      await processPanel.getByRole('tab',{name:'Comunicaciones',exact:true}).click();
+      await processPanel.getByLabel('Tipo de comunicación masiva').selectOption('Ingreso EST');
+      await processPanel.getByText('1 disponibles · 0 seleccionadas',{exact:true}).waitFor();
+      await processPanel.getByRole('tab',{name:'Resumen',exact:true}).click();
+      const reportDownload=page.waitForEvent('download');await processPanel.getByRole('button',{name:'Descargar reporte de esta vacante'}).click();assert.equal((await reportDownload).suggestedFilename(),'reporte-vacante-DEMO.txt');
+      await page.screenshot({path:'qa-output/proceso-'+viewport.width+'.png',fullPage:true});
+      assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Process horizontal overflow');
+      page.once('dialog',d=>d.accept());await processPanel.getByRole('button',{name:'Volver a vacantes',exact:false}).click();
+      console.log('PROCESS_WORKSPACE_PASS '+viewport.width);
       // OCR fixture generated in the browser, no actual CV.
       await nav.getByRole('button',{name:'Configuración',exact:true}).click();
       await page.getByRole('checkbox',{name:'Confirmo que todos los archivos son ficticios.'}).check();

@@ -36,3 +36,5 @@ RC02 candidato: Vite fijado 6.4.6 (release oficial v6.4.6 y advisories GHSA-p9ff
 
 RC02 CI 45462586404/job 138688914038: 137/137, build PASS, audit 0, BULK_INCOME_PASS y OCR_PNG_PASS 1366; OCR PDF timeout, móvil no alcanzado. Render LIVE reportado por propietario, SHA no comprobado por falta de acceso a cuenta nueva.
 Bloque A: lockfile exacto recuperado del log, SHA256 3100aa4b6f633b148aaeec01d89c86403fff1eb5ee8c1f83274ed44f0c84d497, 106 entradas, raíz verificada, npm ci obligatorio y transferencia retirada. OCR PDF configura renderer, decodificadores y fuentes locales, usa canvasContext explícito y QA muestra alerta si falla; causa no comprobada. CI pendiente, no despliegue.
+
+Bloque B candidato: espacio integral por vacante con resumen, postulantes, vínculo e importación, llamados, entrevistas, documentos, ingresos y comunicaciones; conserva estado global completo, scope UI por postulación, usa commits existentes, no crea nuevas tablas. Borradores de proceso conservados al navegar fuera; cerrar solicita confirmación. 3 pruebas adicionales (140 programadas) y QA de espacio/reportes. Sin despliegue, gastos, Codex ni datos reales; CI pendiente.
