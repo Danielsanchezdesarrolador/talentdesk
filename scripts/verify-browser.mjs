@@ -284,6 +284,27 @@ try {
       await page.getByRole('button',{name:/^Unidades /}).click();
       await page.getByRole('row').filter({hasText:'Unidad Excel QA'}).waitFor();
       await page.screenshot({path:'qa-output/importacion-'+viewport.width+'.png',fullPage:true});
+      await nav.getByRole('button',{name:'Inicio',exact:true}).click();
+      await page.getByRole('button',{name:'Ver resumen de jornada'}).click();
+      assert.match(await page.getByLabel('Resumen diario DEMO').inputValue(),/Cobertura: 1\/2/);
+      await page.getByRole('button',{name:'Ocultar resumen'}).click();
+      await page.getByLabel('Búsqueda global').fill('DEMO-IMPORT');
+      await page.getByRole('button',{name:/Persona Importada DEMO-IMPORT/}).click();
+      await page.getByRole('heading',{name:'Persona Importada',exact:true}).waitFor();
+      await page.getByLabel('Vacante para postular').selectOption({index:1});
+      await page.getByRole('button',{name:'Vincular a vacante'}).click();
+      await nav.getByRole('button',{name:'Centro de llamados',exact:true}).click();
+      await page.getByRole('heading',{name:'Persona Importada',exact:true}).waitFor();
+      await page.getByRole('button',{name:'Preparar mensaje DEMO'}).click();
+      assert.match(await page.getByLabel('Mensaje de contacto DEMO').inputValue(),/NO ENVIAR/);
+      await page.getByRole('button',{name:'No contesta',exact:true}).click();
+      assert.notEqual(await page.getByLabel('Próximo contacto').inputValue(),'');
+      await page.getByRole('button',{name:'En 3 días',exact:true}).click();
+      await page.getByRole('button',{name:'Registrar contacto'}).click();
+      await page.getByText('Sin llamados pendientes para hoy.',{exact:true}).waitFor();
+      await nav.getByRole('button',{name:'Inicio',exact:true}).click();
+      assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Studio horizontal page overflow');
+      await page.screenshot({path:'qa-output/studio-'+viewport.width+'.png',fullPage:true});
       assert.deepEqual(errors,[]);
       console.log('BROWSER_PASS '+viewport.width+'x'+viewport.height+' create duplicate edit draft navigation reload search close filters layout');
     } finally {await context.close();}

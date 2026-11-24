@@ -1,0 +1,15 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {globalSearch,dailyWorkspace,dailySummary,followupDate,suggestedFollowup,contactDraft} from '../.test-build/productivity.js';
+import {emptyRecruitment,saveCandidate,emptyCandidate,addApplication,recordContact} from '../.test-build/recruitment.js';
+import {emptyOps} from '../.test-build/operations.js';
+const today='2026-11-24',at='2026-11-24T12:00:00Z';
+const v={id:'v',title:'Técnico DEMO',unit:'Urgencias DEMO',slots:3,covered:1,status:'Activa',date:today};
+const closed={...v,id:'closed',status:'Cerrada',slots:4,covered:0};
+const candidate={...emptyCandidate,firstName:'Persona',lastName:'Ficticia',code:'DEMO-ABC',email:'p@example.invalid',phone:'000000001'};
+const r=saveCandidate(emptyRecruitment(),candidate,'c');const linked=addApplication(r,[v],'c','v','a',at);
+test('buscador encuentra candidatos por código y vacantes por varios términos sin acentos',()=>{assert.equal(globalSearch([v],r,'tecnico urgencias')[0].id,'v');assert.equal(globalSearch([v],r,'demo-abc')[0].id,'c');assert.deepEqual(globalSearch([v],r,'   '),[]);assert.deepEqual(globalSearch([v],r,'inexistente'),[])});
+test('cobertura solo de vacantes activas y acciones calculadas',()=>{const d=dailyWorkspace([v,closed],linked,emptyOps(),today);assert.equal(d.slots,3);assert.equal(d.covered,1);assert.equal(d.pending,2);assert.equal(d.actions.find(a=>a.key==='calls').count,1);assert.equal(d.workCount,1)});
+test('seguimiento futuro no aparece como llamada pendiente hoy',()=>{const next=recordContact(linked,[v],'a','contact','No contesta','',followupDate(today,1),at);assert.equal(dailyWorkspace([v],next,emptyOps(),today).actions[0].count,0);assert.equal(dailyWorkspace([v],next,emptyOps(),'2026-11-25').actions[0].count,1)});
+test('interesado queda pendiente de agenda sin cambiar decisión humana',()=>{const next=recordContact(linked,[v],'a','contact','Interesado','','',at);const d=dailyWorkspace([v],next,emptyOps(),today);assert.equal(d.actions[0].count,0);assert.equal(d.actions.find(a=>a.key==='schedule').count,1);assert.equal(next.interviews.length,0)});
+test('sugerencia explícita de seguimiento y fechas calendario',()=>{assert.equal(suggestedFollowup('No contesta','2026-12-31'),'2027-01-01');assert.equal(suggestedFollowup('Interesado',today),'');assert.throws(()=>followupDate('2026-02-30',1));assert.throws(()=>followupDate(today,0));});
+test('resúmenes y mensajes son locales y no envían',()=>{assert.match(dailySummary([v],linked,emptyOps(),today),/Cobertura: 1\/3/);assert.match(dailySummary([v],linked,emptyOps(),today),/Sin envío automático/);assert.match(contactDraft(r.candidates[0],v),/DEMO · NO ENVIAR/);assert.match(contactDraft(r.candidates[0],v),/Persona/)});

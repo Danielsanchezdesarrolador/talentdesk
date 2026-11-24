@@ -23,9 +23,9 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 |---|---|---|
 | TD-R01 Investigación | Base documental inicial | Patrones ATS y selección tecnológica; sin copiar código externo |
 | TD-R02 Autocompletado | Validado técnicamente (DEMO) | Vacantes rápidas, reutilización y lectura asistida de texto |
-| TD-R03 Importación | Candidato parcial | CSV/TSV/XLSX, PDF textual, texto pegado, plantillas y revisión masiva; CI pendiente, OCR pendiente |
-| TD-R04 Studio | Pendiente | Diseño compacto, navegación y búsqueda |
-| TD-R05 Productividad | Pendiente | Cola y acciones administrativas por eventos |
+| TD-R03 Importación | Validado técnicamente (alcance textual) | CSV/TSV/XLSX, PDF textual, texto pegado, plantillas y revisión masiva; OCR pendiente |
+| TD-R04 Studio | Candidato | Diseño compacto, navegación y búsqueda |
+| TD-R05 Productividad | Candidato parcial | Cola de acciones calculadas, seguimiento y borradores; citaciones e integraciones pendientes |
 | TD-R06 Ingresos | Pendiente | Condiciones, plantillas y documentos |
 | TD-R07 Datos privados | Pendiente | Entorno autorizado y recuperación |
 | TD-R08 Microsoft | Pendiente | Integraciones autorizadas |
