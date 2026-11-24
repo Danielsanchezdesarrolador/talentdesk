@@ -10,7 +10,7 @@ export async function readTable(file:File,delimiter:string):Promise<Sheet[]>{
 }
 export async function readPdf(file:File,key:string):Promise<Review>{
  if(!/\.pdf$/i.test(file.name)||file.size>5_000_000)throw Error('PDF inválido o superior a 5 MB.');
- const [pdf,worker]=await Promise.all([import('pdfjs-dist'),import('pdfjs-dist/build/pdf.worker.min.mjs?url')]);
+ const [pdf,worker]=await Promise.all([import('pdfjs-dist/legacy/build/pdf.mjs'),import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url')]);
  pdf.GlobalWorkerOptions.workerSrc=worker.default;
  const task=pdf.getDocument({data:new Uint8Array(await file.arrayBuffer()),disableFontFace:true,useSystemFonts:false});
  try{const doc=await task.promise;if(doc.numPages>15)throw Error('Máximo 15 páginas por CV.');let text='';

@@ -464,6 +464,16 @@ try {
       await page.getByRole('button',{name:'Vista previa filas Excel'}).click();
       const lines=(await page.getByLabel('Filas Excel del lote').inputValue()).split('\n');assert.equal(lines.length,2);assert.ok(lines.every(l=>l.split('\t').length===11));console.log('BULK_INCOME_PASS '+viewport.width+' '+lines.length+' rows');
       await page.screenshot({path:'qa-output/ingresos-lote-completo-'+viewport.width+'.png',fullPage:true});
+      await page.getByRole('button',{name:'Abrir Remuneraciones'}).click();
+      await page.getByLabel('Estado para Remuneraciones').selectOption('Preparado');
+      await page.getByRole('button',{name:'Recuperar ingresos para Remuneraciones'}).click();
+      await page.getByRole('button',{name:'Preparar filas de Remuneraciones'}).click();
+      const payroll=await page.getByLabel('Filas Excel de Remuneraciones').inputValue();
+      assert.equal(payroll.split('\n').length,2);assert.ok(payroll.split('\n').every(l=>l.split('\t').length===18));
+      assert.ok(payroll.includes('28/11/2026'));assert.ok(payroll.includes('24/11/2026'));
+      await page.getByRole('checkbox',{name:'Revisé el orden y los campos vacíos; son datos ficticios.'}).check();
+      const payrollDownload=page.waitForEvent('download');await page.getByRole('button',{name:'Descargar CSV Remuneraciones'}).click();assert.equal((await payrollDownload).suggestedFilename(),'remuneraciones-DEMO.csv');
+      console.log('PAYROLL_EXPORT_PASS '+viewport.width);
       await nav.getByRole('button',{name:'Vacantes',exact:true}).click();
       await page.getByRole('row').filter({hasText:'Cargo ficticio QA'}).filter({hasText:'Activa'}).getByRole('button',{name:'Abrir proceso'}).click();
       const processPanel=page.getByRole('region',{name:'Espacio integral de vacante'});

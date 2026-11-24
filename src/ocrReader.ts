@@ -12,7 +12,7 @@ export async function readScannedCv(file:File,key:string,stillCurrent:()=>boolea
  try{
   assertCurrent();
   if(/\.pdf$/i.test(file.name)){
-   const [pdf,asset]=await Promise.all([import('pdfjs-dist'),import('pdfjs-dist/build/pdf.worker.min.mjs?url')]);pdf.GlobalWorkerOptions.workerSrc=asset.default;pdf.GlobalWorkerOptions.rendererSrc=new URL('pdf/pdf.renderer.min.mjs',root).href;
+   const [pdf,asset]=await Promise.all([import('pdfjs-dist/legacy/build/pdf.mjs'),import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url')]);pdf.GlobalWorkerOptions.workerSrc=asset.default;pdf.GlobalWorkerOptions.rendererSrc=new URL('pdf/pdf.renderer.min.mjs',root).href;
    const task=pdf.getDocument({data:new Uint8Array(await file.arrayBuffer()),disableFontFace:true,useSystemFonts:false,wasmUrl:new URL('pdf/wasm/',root).href,standardFontDataUrl:new URL('pdf/standard_fonts/',root).href,cMapUrl:new URL('pdf/cmaps/',root).href,cMapPacked:true,iccUrl:new URL('pdf/iccs/',root).href});
    try{const doc=await task.promise;if(doc.numPages>3)throw Error('OCR admite hasta tres páginas por PDF.');
     for(let i=1;i<=doc.numPages;i++){assertCurrent();const page=await doc.getPage(i),base=page.getViewport({scale:1});const scale=Math.min(2.5,Math.sqrt(MAX_PIXELS/(base.width*base.height)),3000/base.width,3000/base.height);const viewport=page.getViewport({scale}),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.floor(viewport.width));canvas.height=Math.max(1,Math.floor(viewport.height));try{const ctx=canvas.getContext('2d');if(!ctx)throw Error('Canvas PDF no disponible.');await page.render({canvas:null,canvasContext:ctx,viewport,background:'white'}).promise;await recognize(canvas);}finally{canvas.width=0;canvas.height=0;page.cleanup();}}

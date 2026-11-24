@@ -28,6 +28,7 @@
     "src/agendaBatch.ts",
     "src/communications.ts",
     "src/communicationHistory.ts",
-    "src/processWorkspace.ts"
+    "src/processWorkspace.ts",
+    "src/payrollExport.ts"
   ]
 }

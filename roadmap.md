@@ -43,8 +43,10 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 
 | TD-SMART-RC02 Cierre técnico | Candidato | Actualización Vite, QA lote acotado, OCR PNG y PDF raster, nueva auditoría y lockfile |
 
-| Bloque A Smart Premium | Candidato de cierre | Lockfile comprometido, npm ci, OCR PDF corrección candidata; aceptación visual/física pendiente |
-| Bloque B Flujo integral | Candidato | Espacio por vacante con siete pestañas y operaciones existentes acotadas; CI pendiente |
+| Bloque A Smart Premium | npm ci/build/audit PASS; OCR PDF pendiente CI | Lockfile comprometido, npm ci, OCR PDF corrección candidata; aceptación visual/física pendiente |
+| Bloque B Flujo integral | Dominio/build y escritorio PASS; móvil pendiente | Espacio por vacante con siete pestañas y operaciones existentes acotadas; CI pendiente |
 | Bloque C Private | Pendiente | Entorno institucional autorizado, identidad y backend |
 | Bloque D Microsoft | Pendiente | Permisos, licencias y flujos reales |
 | Bloque E Piloto | Pendiente | Aceptación y medición |
+
+| TD-REM01 Remuneraciones | Candidato | Exportación DEMO de 18 columnas visibles, revisión manual de campos adicionales y TSV/CSV; CI pendiente |
