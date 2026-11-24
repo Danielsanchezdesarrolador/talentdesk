@@ -37,3 +37,25 @@ jobs:
           path: package-lock.json
           retention-days: 1
           if-no-files-found: error
+      - name: Install isolated browser QA
+        run: |
+          npm install --prefix "$RUNNER_TEMP/talentdesk-qa" --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/talentdesk-qa/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Browser journey (synthetic desktop and mobile)
+        env:
+          QA_NODE_MODULES: ${{ runner.temp }}/talentdesk-qa/node_modules
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 --strictPort &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          node scripts/verify-browser.mjs
+      - name: Save synthetic QA evidence and build
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: talentdesk-demo-evidence
+          path: |
+            qa-output/
+            dist/
+          retention-days: 2
+          if-no-files-found: error

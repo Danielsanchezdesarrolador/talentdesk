@@ -24,3 +24,5 @@ backups/
 uploads/
 
 .test-build/
+
+qa-output/
