@@ -412,12 +412,21 @@ try {
       await page.getByRole('button',{name:'Seleccionar hasta 100 comunicaciones'}).click();
       await page.getByRole('button',{name:'Revisar comunicaciones seleccionadas'}).click();
       await page.getByText('2 comunicaciones revisadas. Ninguna enviada.',{exact:true}).waitFor();
+      await page.getByRole('button',{name:'Archivar borradores revisados'}).click();
+      await page.getByText('2 borradores archivados · 0 ya existentes. Ninguno enviado.',{exact:true}).waitFor();
+      await page.getByRole('button',{name:'Archivar borradores revisados'}).click();
+      await page.getByText('0 borradores archivados · 2 ya existentes. Ninguno enviado.',{exact:true}).waitFor();
       const commDownload=page.waitForEvent('download');await page.getByRole('button',{name:'Descargar comunicaciones CSV'}).click();assert.equal((await commDownload).suggestedFilename(),'comunicaciones-DEMO.csv');
       await page.getByLabel('Tipo de comunicación masiva').selectOption('Ingreso EST');
       await page.getByRole('button',{name:'Seleccionar hasta 100 comunicaciones'}).click();
       await page.getByRole('button',{name:'Revisar comunicaciones seleccionadas'}).click();
       await page.getByText('1 comunicaciones revisadas. Ninguna enviada.',{exact:true}).waitFor();
       await page.screenshot({path:'qa-output/comunicaciones-'+viewport.width+'.png',fullPage:true});
+      await page.reload();await nav.getByRole('button',{name:'Reportes y tareas',exact:true}).click();
+      await page.getByRole('button',{name:'Comunicaciones',exact:true}).click();
+      await page.getByText('2 de 2 borradores históricos',{exact:true}).waitFor();
+      await page.getByLabel('Tipo de historial de comunicaciones').selectOption('Ingreso EST');
+      await page.getByText('0 de 2 borradores históricos',{exact:true}).waitFor();
       assert.deepEqual(errors,[]);
       console.log('BROWSER_PASS '+viewport.width+'x'+viewport.height+' create duplicate edit draft navigation reload search close filters layout');
     } finally {await context.close();}

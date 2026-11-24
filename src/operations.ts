@@ -1,3 +1,4 @@
+import {validateHistory,type CommunicationRecord} from './communicationHistory.js';
 import type {StoragePort,Vacancy} from './vacancies.js';
 import type {Recruitment} from './recruitment.js';
 import {incomeHeaders,totalCovered} from './selection.js';
@@ -18,7 +19,7 @@ export type Task=TaskDraft&{id:string;history:Event[]};
 export type FairDraft={title:string;date:string;place:string;status:typeof fairStates[number];contacts:number;notes:string};
 export type Fair=FairDraft&{id:string;history:Event[]};
 export type Run={id:string;flow:Flow;sourceId:string;at:string;status:'Preparado local'|'Simulado sin envío';payload:string;history:Event[]};
-export type Operations={documents:Document[];tasks:Task[];fairs:Fair[];runs:Run[]};
+export type Operations={documents:Document[];tasks:Task[];fairs:Fair[];runs:Run[];communications?:CommunicationRecord[]};
 export const emptyOps=():Operations=>({documents:[],tasks:[],fairs:[],runs:[]});
 export const emptyDoc:DocumentDraft={applicationId:'',name:'',due:'',status:'Pendiente',reference:'',notes:''};
 export const emptyTask:TaskDraft={title:'',due:'',priority:'Media',status:'Pendiente',notes:'',vacancyId:''};
@@ -62,6 +63,7 @@ export function loadOps(storage:StoragePort):Operations{
  const raw=storage.getItem(OPS_KEY);if(raw===null)return emptyOps();const d=JSON.parse(raw) as Operations;
  if(!d||!Array.isArray(d.documents)||!Array.isArray(d.tasks)||!Array.isArray(d.fairs)||!Array.isArray(d.runs))throw Error('Datos administrativos corruptos.');
  function readRows<T extends {id:string;history:Event[]}>(rows:T[],validate:(r:T)=>unknown,state:(r:T)=>string){const ids=new Set<string>();for(const r of rows){validID(r.id);validate(r);if(ids.has(r.id)||!Array.isArray(r.history)||!r.history.length||r.history[0].state!==state(r))throw Error('Historial inválido.');ids.add(r.id);for(const h of r.history){stamp(h.at);str(h.state,100,true);str(h.note,1000);}}return rows;}
+ if(d.communications!==undefined)validateHistory(d.communications);
  readRows(d.documents,docClean,r=>r.status);readRows(d.tasks,taskClean,r=>r.status);readRows(d.fairs,fairClean,r=>r.status);
  readRows(d.runs,r=>{stamp(r.at);validID(r.sourceId);if(!['PA-01','PA-02'].includes(r.flow)||!['Preparado local','Simulado sin envío'].includes(r.status)||JSON.parse(str(r.payload,30000,true)).mode!=='DEMO')throw Error('Preparación inválida.');},r=>r.status);
  if(new Set(d.documents.map(r=>JSON.stringify([r.applicationId,norm(r.name)]))).size!==d.documents.length||new Set(d.runs.map(r=>JSON.stringify([r.flow,r.sourceId]))).size!==d.runs.length)throw Error('Duplicados en almacenamiento.');

@@ -26,6 +26,7 @@
     "src/localWorkflows.ts",
     "src/bulkInvitations.ts",
     "src/agendaBatch.ts",
-    "src/communications.ts"
+    "src/communications.ts",
+    "src/communicationHistory.ts"
   ]
 }

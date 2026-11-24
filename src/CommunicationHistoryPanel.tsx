@@ -1,0 +1,8 @@
+import {useState} from 'react';
+import {communicationKinds,type CommunicationKind} from './communications.js';
+import {historyFilter,type CommunicationRecord} from './communicationHistory.js';
+export function CommunicationHistoryPanel({rows}:{rows:CommunicationRecord[]}){
+ const [kind,setKind]=useState<CommunicationKind|'Todas'>('Todas'),[query,setQuery]=useState('');
+ const visible=historyFilter(rows,kind,query);
+ return <article className="card spaced"><h2>Historial de borradores revisados</h2><p>Registros locales inmutables, no constancia de envío ni confirmación. Se incluye en el respaldo DEMO. Los originales pueden haber cambiado: para volver a preparar un correo utiliza el Centro de comunicaciones.</p><div className="import-map"><label>Tipo histórico<select aria-label="Tipo de historial de comunicaciones" value={kind} onChange={e=>setKind(e.target.value as CommunicationKind|'Todas')}><option>Todas</option>{communicationKinds.map(k=><option key={k}>{k}</option>)}</select></label><label>Buscar<input aria-label="Buscar historial de comunicaciones" value={query} onChange={e=>setQuery(e.target.value)}/></label></div><p>{visible.length} de {rows.length} borradores históricos</p>{visible.map(r=><details className="import-review" key={r.id}><summary>{r.message.name} · {r.message.kind} · {r.status}</summary><p>Revisión local: {r.at}</p><p>Para: {r.message.recipient}</p><p>Asunto original: {r.message.subject}</p><textarea aria-label={'Borrador histórico '+r.id} readOnly rows={8} value={r.message.body}/></details>)}{!visible.length&&<p>No hay borradores históricos para este filtro.</p>}</article>;
+}

@@ -2,6 +2,7 @@ import {KEY,loadRows,type StoragePort} from './vacancies.js';
 import {CATALOG_KEY,loadCatalogs} from './catalogs.js';
 import {RECRUITMENT_KEY,loadRecruitment} from './recruitment.js';
 import {OPS_KEY,loadOps} from './operations.js';
+import {sourceExists} from './communicationHistory.js';
 import {totalCovered,incomeHeaders} from './selection.js';
 export const RESTORE_MARKER='talentdesk.restore.pending.v1';
 export const BACKUP_KEYS=[KEY,CATALOG_KEY,RECRUITMENT_KEY,OPS_KEY] as const;
@@ -13,6 +14,7 @@ function validBundle(data:Record<Key,string>){
  const port={getItem:(k:string)=>data[k as Key]??null,setItem:()=>{throw Error('Solo lectura')}};
  const vacancies=loadRows(port),catalog=loadCatalogs(port),recruit=loadRecruitment(port),ops=loadOps(port);
  if(recruit.applications.some(a=>!vacancies.some(v=>v.id===a.vacancyId))||ops.documents.some(d=>!recruit.applications.some(a=>a.id===d.applicationId))||ops.tasks.some(t=>t.vacancyId&&!vacancies.some(v=>v.id===t.vacancyId))||vacancies.some(v=>totalCovered(recruit,v)>v.slots))throw Error('El respaldo contiene referencias o coberturas inconsistentes.');
+ if((ops.communications??[]).some(r=>!sourceExists(r.message,{recruit})))throw Error('Borrador histórico sin referencia de origen.');
  for(const r of ops.runs){const h=recruit.hires.find(h=>h.id===r.sourceId&&h.status==='Confirmado DEMO');if(!h)throw Error('Ejecución sin ingreso confirmado.');const expected=r.flow==='PA-01'?{mode:'DEMO',requestId:r.id,columns:incomeHeaders,row:h.row}:{mode:'DEMO',requestId:r.id,recipient:h.recipient,subject:h.subject,body:h.body};if(JSON.stringify(JSON.parse(r.payload))!==JSON.stringify(expected))throw Error('Payload de automatización inconsistente.');}
  return {data:{[KEY]:JSON.stringify(vacancies),[CATALOG_KEY]:JSON.stringify(catalog),[RECRUITMENT_KEY]:JSON.stringify(recruit),[OPS_KEY]:JSON.stringify(ops)},counts:{vacancies:vacancies.length,candidates:recruit.candidates.length,applications:recruit.applications.length,hires:recruit.hires.length,documents:ops.documents.length,tasks:ops.tasks.length,fairs:ops.fairs.length}};
 }

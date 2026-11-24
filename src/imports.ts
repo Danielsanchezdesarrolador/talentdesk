@@ -28,10 +28,11 @@ export function mappedRows(grid:Grid,map:Mapping,target:Target):Review[]{validat
 export function extractCv(text:string,source:string,key:string):Review{
  if(text.length>MAX_TEXT)throw Error('Texto del CV demasiado extenso.');
  const lines=text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
- const get=(labels:string[])=>{const matches=lines.flatMap(l=>{const i=l.indexOf(':');return i>=0&&labels.includes(normalize(l.slice(0,i)))?[l.slice(i+1).trim()]:[]});return matches.length===1?matches[0]:'';};
+ const fullNameLabel=['nombre completo','nombres y apellidos'];
+ const get=(labels:string[])=>{const matches=lines.flatMap(l=>{const m=l.match(/^([^:：]{1,60})\s*[:：]\s*(.+)$/);return m&&labels.includes(normalize(m[1]))?[m[2].trim()]:[]});return matches.length===1?matches[0]:'';};
  const emails=[...new Set((text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.invalid\b/gi)??[]).map(s=>s.toLowerCase()))];
- const phone=get(['telefono','celular','nro telefono']);const code=get(['codigo demo','codigo','identificador']);
- return {key,source,selected:true,values:{firstName:get(['nombre','nombres']),lastName:get(['apellido','apellidos']),code:/^DEMO-[A-Z0-9-]+$/i.test(code)?code:'',email:emails.length===1?emails[0]:'',phone:/^[0-9 +()-]+$/.test(phone)?phone:'',profession:get(['profesion','cargo']),experience:get(['experiencia']),availability:get(['disponibilidad']),cv:source.slice(0,250)}};
+ const phone=get(['telefono','celular','nro telefono','telefono de contacto','movil']);const code=get(['codigo demo','codigo','identificador']);const full=get(fullNameLabel);
+ return {key,source,selected:true,values:{firstName:get(['nombre','nombres']),lastName:get(['apellido','apellidos','apellido paterno y materno']),code:/^DEMO-[A-Z0-9-]+$/i.test(code)?code:'',email:emails.length===1?emails[0]:'',phone:/^[0-9 +()-]+$/.test(phone)?phone:'',profession:get(['profesion','cargo','titulo profesional','ocupacion']),experience:get(['experiencia']),availability:get(['disponibilidad','disponibilidad laboral']),cv:source.slice(0,250),notes:full?'Nombre completo detectado (separar y revisar manualmente): '+full.slice(0,200):''}};
 }
 export type Preview={key:string;source:string;ok:boolean;message:string};
 export function planImport(target:Target,review:Review[],catalog:Entry[],recruit:Recruitment,vacancies:readonly Vacancy[],vacancyId:string,makeId:()=>string,at:string){
