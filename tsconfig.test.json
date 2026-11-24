@@ -23,6 +23,7 @@
     "src/adminAutomation.ts",
     "src/encryptedBackup.ts",
     "src/revisionSync.ts",
-    "src/localWorkflows.ts"
+    "src/localWorkflows.ts",
+    "src/bulkInvitations.ts"
   ]
 }

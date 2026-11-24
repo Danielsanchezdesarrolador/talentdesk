@@ -28,5 +28,7 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 | TD-R05 Productividad | Ampliación local validada | Acciones, seguimiento, citaciones locales e ICS; Microsoft pendiente |
 | TD-R06 Ingresos | Validado técnicamente (dominio y exportación navegador) | Preparación masiva; recorrido de preparación en navegador pendiente |
 | TD-R07 Datos privados | Fundamentos DEMO validados | Respaldo cifrado y protocolo de revisiones; backend/identidad autorizados pendientes |
-| TD-R08 Microsoft | Candidato local; proveedor pendiente | Vistas PA-06 a PA-09, ICS/citación e importación manual; conexiones requieren autorización |
-| TD-R09 Optimización | Candidato parcial | Checklist masivo y reportes semanales; medición real y aceptación pendientes |
+| TD-R08 Microsoft | Alcance local validado; proveedor pendiente | Vistas PA-06 a PA-09, ICS/citación e importación manual; conexiones requieren autorización |
+| TD-R09 Optimización | Checklist y reportes locales validados | Checklist masivo y reportes semanales; medición real y aceptación pendientes |
+
+| TD-CIT01 Citaciones masivas | Candidato | Pegado Excel, horarios, revisión individual y exportación CSV DEMO; envío institucional pendiente |

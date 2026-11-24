@@ -355,6 +355,25 @@ try {
       await encrypted.saveAs(encryptedPath);
       const encryptedFresh=await browser.newContext({viewport});
       try{const p=await encryptedFresh.newPage();await p.goto(base);await p.getByRole('navigation',{name:'Módulos'}).getByRole('button',{name:'Configuración',exact:true}).click();await p.getByLabel('Archivo cifrado DEMO').setInputFiles(encryptedPath);await p.getByLabel('Contraseña del respaldo cifrado',{exact:true}).fill('contraseña-incorrecta');await p.getByRole('button',{name:'Descifrar y revisar respaldo'}).click();await p.getByText('Contraseña incorrecta o respaldo alterado.',{exact:true}).waitFor();await p.getByLabel('Contraseña del respaldo cifrado',{exact:true}).fill(pass);await p.getByRole('button',{name:'Descifrar y revisar respaldo'}).click();await p.getByText('Respaldo cifrado validado:',{exact:false}).waitFor();await p.getByRole('checkbox',{name:'Confirmo perfil vacío y otras pestañas cerradas.'}).check();await p.getByRole('button',{name:'Restaurar respaldo cifrado DEMO'}).click();await p.getByRole('heading',{name:'Resumen de hoy'}).waitFor();await p.getByRole('navigation',{name:'Módulos'}).getByRole('button',{name:'Candidatos',exact:true}).click();await p.getByRole('row').filter({hasText:'DEMO-IMPORT'}).waitFor();}finally{await encryptedFresh.close();}
+      await nav.getByRole('button',{name:'Entrevistas',exact:true}).click();
+      await page.getByRole('button',{name:'Abrir citaciones masivas'}).click();
+      await page.getByRole('checkbox',{name:'Confirmo que la tabla de citaciones es ficticia.'}).check();
+      await page.getByLabel('Tabla de citaciones ficticias').fill(Array.from({length:5},(_,i)=>['Persona Demo '+(i+1),'DEMO-CIT-'+i,'00000000'+i,'cit'+i+'@example.invalid','25/11/2026 / '+['10:00','10:20','10:40','11:00','11:20'][i],'NO','Cargo DEMO'].join('\t')).join('\n'));
+      await page.getByRole('button',{name:'Leer tabla de citaciones'}).click();
+      await page.getByLabel('Lugar común de citaciones').fill('Sala DEMO');
+      await page.getByLabel('Entrevistador común de citaciones').fill('Entrevistador DEMO');
+      await page.getByRole('button',{name:'Generar borradores individuales'}).click();
+      await page.getByText('5 borradores individuales preparados. No enviados.',{exact:true}).waitFor();
+      await page.getByText('Persona Demo 5 · 11:20 · cit4@example.invalid',{exact:true}).click();
+      assert.match(await page.getByLabel('Borrador individual 5').inputValue(),/Hora: 11:20/);
+      const citDownload=page.waitForEvent('download');await page.getByRole('button',{name:'Descargar CSV para correspondencia'}).click();assert.equal((await citDownload).suggestedFilename(),'citaciones-individuales-DEMO.csv');
+      await page.getByLabel('Fecha común de citaciones').fill('2026-11-26');
+      await page.getByLabel('Inicio de horarios masivos').fill('09:00');
+      await page.getByLabel('Intervalo de citaciones').selectOption('15');
+      await page.getByRole('button',{name:'Asignar horarios consecutivos'}).click();
+      await page.getByRole('button',{name:'Generar borradores individuales'}).click();
+      await page.getByText('Persona Demo 5 · 10:00 · cit4@example.invalid',{exact:true}).waitFor();
+      await page.screenshot({path:'qa-output/citaciones-masivas-'+viewport.width+'.png',fullPage:true});
       assert.deepEqual(errors,[]);
       console.log('BROWSER_PASS '+viewport.width+'x'+viewport.height+' create duplicate edit draft navigation reload search close filters layout');
     } finally {await context.close();}
