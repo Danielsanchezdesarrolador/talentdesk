@@ -374,6 +374,37 @@ try {
       await page.getByRole('button',{name:'Generar borradores individuales'}).click();
       await page.getByText('Persona Demo 5 · 10:00 · cit4@example.invalid',{exact:true}).waitFor();
       await page.screenshot({path:'qa-output/citaciones-masivas-'+viewport.width+'.png',fullPage:true});
+      await nav.getByRole('button',{name:'Candidatos',exact:true}).click();
+      for(const code of ['DEMO-PDF','DEMO-PEGADA']){
+        await page.getByRole('row').filter({hasText:code}).getByRole('button',{name:'Ver ficha'}).click();
+        await page.getByLabel('Vacante para postular').selectOption({index:1});
+        await page.getByRole('button',{name:'Vincular a vacante'}).click();
+        await nav.getByRole('button',{name:'Centro de llamados',exact:true}).click();
+        await page.getByLabel('Resultado del contacto').selectOption('Interesado');
+        await page.getByRole('button',{name:'Registrar contacto'}).click();
+        await nav.getByRole('button',{name:'Candidatos',exact:true}).click();
+      }
+      await nav.getByRole('button',{name:'Entrevistas',exact:true}).click();
+      await page.getByRole('button',{name:'Abrir agenda masiva'}).click();
+      await page.getByRole('button',{name:'Recuperar postulaciones para agenda'}).click();
+      await page.getByLabel('Fecha de agenda masiva').fill('2026-11-27');
+      await page.getByLabel('Lugar de agenda masiva').fill('Sala agenda QA');
+      await page.getByLabel('Entrevistador de agenda masiva').fill('Jefatura agenda QA');
+      await page.getByRole('button',{name:'Asignar horarios de agenda'}).click();
+      await page.getByRole('button',{name:'Validar agenda en lote'}).click();
+      await page.getByText('2 entrevistas listas para guardar.',{exact:true}).waitFor();
+      await page.getByRole('button',{name:'Guardar agenda en lote'}).click();
+      await page.getByText('2 entrevistas agendadas DEMO. Sin envío.',{exact:true}).waitFor();
+      await page.getByLabel('Operación de agenda masiva').selectOption('reschedule');
+      await page.getByRole('button',{name:'Recuperar postulaciones para agenda'}).click();
+      await page.getByLabel('Hora inicial de agenda masiva').fill('13:00');
+      await page.getByRole('button',{name:'Asignar horarios de agenda'}).click();
+      await page.getByRole('button',{name:'Guardar agenda en lote'}).click();
+      await page.getByText('2 entrevistas reprogramadas DEMO. Sin envío.',{exact:true}).waitFor();
+      await page.reload();
+      await nav.getByRole('button',{name:'Entrevistas',exact:true}).click();
+      assert.equal(await page.getByText(/2026-11-27 · 13:(00|20) · Sala agenda QA/).count(),2);
+      await page.screenshot({path:'qa-output/agenda-masiva-'+viewport.width+'.png',fullPage:true});
       assert.deepEqual(errors,[]);
       console.log('BROWSER_PASS '+viewport.width+'x'+viewport.height+' create duplicate edit draft navigation reload search close filters layout');
     } finally {await context.close();}

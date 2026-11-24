@@ -24,6 +24,7 @@
     "src/encryptedBackup.ts",
     "src/revisionSync.ts",
     "src/localWorkflows.ts",
-    "src/bulkInvitations.ts"
+    "src/bulkInvitations.ts",
+    "src/agendaBatch.ts"
   ]
 }

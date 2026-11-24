@@ -31,4 +31,6 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 | TD-R08 Microsoft | Alcance local validado; proveedor pendiente | Vistas PA-06 a PA-09, ICS/citación e importación manual; conexiones requieren autorización |
 | TD-R09 Optimización | Checklist y reportes locales validados | Checklist masivo y reportes semanales; medición real y aceptación pendientes |
 
-| TD-CIT01 Citaciones masivas | Candidato | Pegado Excel, horarios, revisión individual y exportación CSV DEMO; envío institucional pendiente |
+| TD-CIT01 Citaciones masivas | Validado técnicamente (DEMO) | Pegado Excel, horarios, revisión individual y exportación CSV DEMO; envío institucional pendiente |
+
+| TD-CIT02 Agenda masiva | Candidato | Agendar y reprogramar postulaciones, conservar historial, controlar hora exacta; CI pendiente |

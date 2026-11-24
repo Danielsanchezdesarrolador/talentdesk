@@ -1,6 +1,6 @@
 import {parseDelimited,normalize} from './imports.js';
 import type {Entry} from './catalogs.js';
-export type InviteRow={id:string;name:string;email:string;date:string;time:string;job:string;selected:boolean};
+export type InviteRow={id:string;name:string;email:string;date:string;time:string;job:string;selected:boolean;invalidDate?:boolean};
 export type Common={date:string;job:string;place:string;interviewer:string;instructions:string;templateId:string};
 export type DraftMail={id:string;name:string;email:string;date:string;time:string;job:string;place:string;interviewer:string;instructions:string;subject:string;body:string};
 export type Mode='header'|'wide'|'compact';
@@ -20,13 +20,13 @@ export function parseInvitationRows(raw:string,mode:Mode):InviteRow[]{
   name=col(['nombre completo','nombre','candidato','nombres'],true);mail=col(['correo','email','correo electronico','correo ficticio'],true);dateCol=col(['fecha y hora','fecha / hora','fecha entrevista','fecha de entrevista','fecha']);timeCol=col(['hora','hora entrevista','hora de entrevista']);jobCol=col(['cargo','puesto','vacante']);rows=grid.slice(1);
  }
  if(!rows.length||rows.length>max)throw Error('Se admiten entre 1 y 100 filas de candidatos.');
- return rows.map((r,i)=>{const at=splitDate(r[dateCol]??'');return {id:'fila-'+(i+1),name:clean(r[name]??''),email:(r[mail]??'').trim().toLowerCase(),date:at.date,time:timeCol>=0?time(r[timeCol]??''):at.time,job:clean((jobCol===-2?r.length>=6?r[r.length-1]:'':r[jobCol])??''),selected:true};});
+ return rows.map((r,i)=>{const at=splitDate(r[dateCol]??'');return {id:'fila-'+(i+1),name:clean(r[name]??''),email:(r[mail]??'').trim().toLowerCase(),date:at.date,invalidDate:!!(r[dateCol]??'').trim()&&!at.date,time:timeCol>=0?time(r[timeCol]??''):at.time,job:clean((jobCol===-2?r.length>=6?r[r.length-1]:'':r[jobCol])??''),selected:true};});
 }
 export function assignTimes(rows:readonly InviteRow[],date:string,start:string,interval:number){
  if(!validDay(date)||!time(start)||![10,15,20,30,45,60].includes(interval))throw Error('Fecha, hora o intervalo inválidos.');
  const [h,m]=time(start).split(':').map(Number);const selected=rows.filter(r=>r.selected).length;
  if(!selected||h*60+m+(selected-1)*interval>=1440)throw Error('El horario excede el día o no hay filas seleccionadas.');
- let n=0;return rows.map(r=>{if(!r.selected)return r;const total=h*60+m+n++*interval;return {...r,date,time:String(Math.floor(total/60)).padStart(2,'0')+':'+String(total%60).padStart(2,'0')};});
+ let n=0;return rows.map(r=>{if(!r.selected)return r;const total=h*60+m+n++*interval;return {...r,date,invalidDate:false,time:String(Math.floor(total/60)).padStart(2,'0')+':'+String(total%60).padStart(2,'0')};});
 }
 export function buildInvitations(rows:readonly InviteRow[],common:Common,catalog:readonly Entry[]){
  const chosen=rows.filter(r=>r.selected);
@@ -39,7 +39,7 @@ export function buildInvitations(rows:readonly InviteRow[],common:Common,catalog
  for(const r of chosen){
   const name=clean(r.name),recipient=r.email.trim().toLowerCase(),date=r.date||common.date,job=clean(r.job||common.job),t=time(r.time);
   const problems:string[]=[];
-  if(!name||name.length>180)problems.push('nombre requerido');if(!email(recipient))problems.push('solo correo ficticio .invalid');if(!validDay(date))problems.push('fecha inválida');if(!t)problems.push('hora inválida');if(!job||job.length>150)problems.push('cargo requerido');
+  if(!name||name.length>180)problems.push('nombre requerido');if(!email(recipient))problems.push('solo correo ficticio .invalid');if(r.invalidDate||!validDay(date))problems.push('fecha inválida; corrige o reasigna explícitamente');if(!t)problems.push('hora inválida');if(!job||job.length>150)problems.push('cargo requerido');
   if(emails.has(recipient))problems.push('correo repetido en lote');if(slots.has(date+' '+t))problems.push('horario repetido en lote');
   if(recipient)emails.add(recipient);if(date&&t)slots.add(date+' '+t);
   if(problems.length){issues.push({id:r.id,message:problems.join(' · ')});continue;}
