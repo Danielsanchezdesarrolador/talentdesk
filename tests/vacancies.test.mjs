@@ -1,0 +1,12 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {saveVacancy,loadRows,persistRows,queryRows,metrics,KEY} from '../.test-build/vacancies.js';
+const d={title:'Cargo ficticio',unit:'Unidad demo',slots:2,status:'Activa',date:'2026-11-24'};
+const store=()=>{const m=new Map();return {getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,v)}};
+test('crear y recuperar tras reconstruir el repositorio',()=>{const s=store();const rows=saveVacancy([],d,'a');persistRows(s,rows);assert.deepEqual(loadRows(s),rows)});
+test('editar sin duplicar identificador',()=>{const rows=saveVacancy([],d,'a');assert.deepEqual(saveVacancy(rows,{...d,slots:3},'a',true),[{...d,slots:3,id:'a'}])});
+test('duplicado normalizado bloqueado',()=>assert.throws(()=>saveVacancy(saveVacancy([],d,'a'),{...d,title:' CARGO   FICTICIO '},'b'),/Ya existe/));
+test('misma vacante cerrada no bloquea nuevo proceso',()=>assert.equal(saveVacancy(saveVacancy([],{...d,status:'Cerrada'},'a'),d,'b').length,2));
+test('validaciones de fecha, cupos y texto',()=>{for(const v of [{...d,date:'2026-02-30'},{...d,slots:0},{...d,slots:1.5},{...d,title:' '}])assert.throws(()=>saveVacancy([],v,'a'))});
+test('búsqueda, estado e indicadores',()=>{const rows=saveVacancy(saveVacancy([],d,'a'),{...d,title:'Otro',status:'Cerrada'},'b');assert.equal(queryRows(rows,'FICTICIO','Activa').length,1);assert.deepEqual(metrics(rows),{active:1,slots:2,closed:1})});
+test('almacenamiento corrupto no se sobrescribe',()=>{const s=store();s.setItem(KEY,'{');assert.throws(()=>loadRows(s));assert.equal(s.getItem(KEY),'{')});
+test('fallo de escritura no se presenta como éxito',()=>assert.throws(()=>persistRows({getItem:()=>null,setItem:()=>{throw Error('quota')}},[]),/quota/));
+test('no permite editar registro inexistente ni reutilizar ID',()=>{assert.throws(()=>saveVacancy([],d,'a',true));assert.throws(()=>saveVacancy(saveVacancy([],d,'a'),d,'a'))});

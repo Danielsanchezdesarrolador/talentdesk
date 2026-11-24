@@ -3,8 +3,8 @@ Objetivo: gestionar vacantes, candidatos, contactos, entrevistas e ingresos desd
 
 | Etapa | Estado | Salida verificable |
 |---|---|---|
-| TD-CP01 Definición | En curso | Alcance, diseño, arquitectura y límites aprobados |
-| TD-CP02 Cimientos | Pendiente | Acceso privado y primera operación persistente sintética |
+| TD-CP01 Definición | Cerrado (alcance inicial) | Alcance inicial y diseño Studio aprobados; backend real y activos finales diferidos |
+| TD-CP02 Cimientos | En curso | Primera operación persistente sintética y validación en navegador; acceso privado requerido antes de datos reales |
 | TD-CP03 Catálogos | Pendiente | Cargos, unidades, horarios, rentas y empresas editables con datos ficticios |
 | TD-CP04 Vacantes | Pendiente | Crear, editar, buscar y cerrar vacantes con historial |
 | TD-CP05 Candidatos | Pendiente | Ficha única, CV sintético, postulaciones y detección de duplicados |
@@ -16,4 +16,4 @@ Objetivo: gestionar vacantes, candidatos, contactos, entrevistas e ingresos desd
 | TD-CP11 Indicadores | Pendiente | Dashboard y reportes calculados desde registros |
 | TD-CP12 PWA | Pendiente | Prueba física, recuperación y aceptación según alcance autorizado |
 
-MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrador de correo, sin depender de integraciones externas. Stack candidato React/TypeScript/Vite; backend por decidir. Integraciones Microsoft sujetas a permisos y licencias. No publicar datos reales ni recursos privados.
+MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrador de correo, sin depender de integraciones externas. React/TypeScript/Vite para DEMO local; backend real por decidir. Integraciones Microsoft sujetas a permisos y licencias. No publicar datos reales ni recursos privados.

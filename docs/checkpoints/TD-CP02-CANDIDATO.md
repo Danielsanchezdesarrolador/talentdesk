@@ -1,0 +1,6 @@
+# TD-CP02 — Candidato 0.1.0
+24/11/2026. Base documental: ca528fa78f351f9b865bfa93339f9794ffd190fa.
+CP01 aprobado para iniciar implementación con alcance inicial; backend real, activos definitivos y aprobación institucional pendientes.
+Entrega: React/TypeScript/Vite, navegación de nueve módulos, Inicio con métricas de la demo, creación/edición/cierre/búsqueda de vacantes ficticias. Siete módulos restantes identificados como no implementados. Marca tipográfica provisional. Persistencia por origen/navegador, sin cuenta, servidor, sincronización ni documentos. No utilizar datos reales. El control de cambios en otra pestaña reduce sobrescrituras pero no garantiza ausencia de carreras. Regla provisional de duplicidad activa por cargo/unidad/fecha.
+Validación local previa reportada: 9/9 pruebas de dominio y adaptador con doble de prueba; instalación npm bloqueada por DNS. Build completo, lockfile, navegador, autenticación y PWA pendientes. Publicación autorizada con CI de solo lectura, instalación, pruebas y build; sin deploy. La CI no certifica la experiencia de navegador ni producción.
+Siguiente: verificar CI sobre el commit publicado y recuperar lockfile; validar recorrido en navegador. CP02 abierto.

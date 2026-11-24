@@ -1,4 +1,3 @@
 # Estado operativo
-24/11/2026 — TD-CP01 en curso. Dirección visual Studio (índigo/violeta), web/PWA monousuario. Roadmap inicial acordado. Modelo de datos y stack candidatos. Repositorio público main verificado antes de publicar esta fundación documental. Sin código funcional, CI configurada, infraestructura ni integraciones activadas por esta entrega. Solo datos sintéticos.
-
-Siguiente: cerrar arquitectura y alcance de primera entrega vertical. Mockups restantes, archivos originales de marca y permisos institucionales pendientes. No usar datos reales sin aprobación.
+24/11/2026 — TD-CP01 cerrado en alcance inicial por autorización del propietario; diseño Studio y arquitectura DEMO local adoptados, backend real y activos originales pendientes. TD-CP02 en curso. Candidato 0.1.0: React/TS/Vite, navegación, Inicio y gestión de vacantes ficticias. Pruebas de dominio locales reportadas 9/9; instalación npm local bloqueada por DNS; CI configurada para instalación, pruebas y build, resultado pendiente de verificar. Sin despliegue, autenticación real, PWA instalable ni integraciones. No usar datos reales.
+Siguiente: verificar CI del SHA publicado, recuperar lockfile y comprobar recorrido en navegador. Mantener CP02 abierto hasta aceptación del alcance y resolver límites antes de uso real.
