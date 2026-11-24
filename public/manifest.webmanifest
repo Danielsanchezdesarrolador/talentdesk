@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "TalentDesk 1.0 · DEMO",
+  "short_name": "TalentDesk",
+  "description": "Prototipo de reclutamiento con datos ficticios",
+  "lang": "es-CL",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f7ff",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

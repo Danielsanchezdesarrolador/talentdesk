@@ -15,6 +15,7 @@
     "src/catalogs.ts",
     "src/recruitment.ts",
     "src/selection.ts",
-    "src/operations.ts"
+    "src/operations.ts",
+    "src/backup.ts"
   ]
 }

@@ -203,6 +203,20 @@ try {
       assert.ok(await page.getByText('Tarea ficticia QA',{exact:true}).isVisible());
       await page.getByRole('button',{name:'Automatizaciones',exact:true}).click();
       assert.ok(await page.getByText('Simulado sin envío',{exact:true}).isVisible());
+      await nav.getByRole('button',{name:'Configuración',exact:true}).click();
+      const downloadPromise=page.waitForEvent('download');
+      await page.getByRole('button',{name:'Exportar respaldo DEMO'}).click();
+      const download=await downloadPromise;
+      const backupPath='qa-output/backup-DEMO-'+viewport.width+'.json';
+      await download.saveAs(backupPath);
+      const manifest=await page.evaluate(async()=>await (await fetch('./manifest.webmanifest')).json());
+      assert.equal(manifest.display,'standalone');
+      assert.equal(manifest.icons.length,2);
+      for(const icon of manifest.icons){assert.ok(await page.evaluate(async(src)=>(await fetch(src)).ok,icon.src));}
+      await page.evaluate(async()=>{await Promise.race([navigator.serviceWorker.ready,new Promise((_,reject)=>setTimeout(()=>reject(Error('Service worker no listo')),10000))]);});
+      const fresh=await browser.newContext({viewport});
+      try{const p=await fresh.newPage();await p.goto(base);await p.getByRole('navigation',{name:'Módulos'}).getByRole('button',{name:'Configuración',exact:true}).click();await p.getByLabel('Archivo JSON de respaldo').setInputFiles(backupPath);await p.getByText('Respaldo validado:',{exact:false}).waitFor();await p.getByRole('checkbox',{name:/Confirmo que este perfil/}).check();await p.getByRole('button',{name:'Restaurar respaldo DEMO'}).click();await p.getByRole('heading',{name:'Resumen de hoy'}).waitFor();await p.getByRole('navigation',{name:'Módulos'}).getByRole('button',{name:'Ingresos',exact:true}).click();assert.ok(await p.getByText('Persona Ficticia QA',{exact:true}).isVisible());await p.getByRole('navigation',{name:'Módulos'}).getByRole('button',{name:'Documentos',exact:true}).click();assert.ok(await p.getByText('Documento ficticio QA',{exact:true}).isVisible());}finally{await fresh.close();}
+      await page.screenshot({path:'qa-output/respaldo-'+viewport.width+'.png',fullPage:true});
       assert.deepEqual(errors,[]);
       console.log('BROWSER_PASS '+viewport.width+'x'+viewport.height+' create duplicate edit draft navigation reload search close filters layout');
     } finally {await context.close();}
