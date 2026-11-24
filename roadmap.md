@@ -23,10 +23,10 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 |---|---|---|
 | TD-R01 Investigación | Base documental inicial | Patrones ATS y selección tecnológica; sin copiar código externo |
 | TD-R02 Autocompletado | Validado técnicamente (DEMO) | Vacantes rápidas, reutilización y lectura asistida de texto |
-| TD-R03 Importación | Validado técnicamente (alcance textual) | CSV/TSV/XLSX, PDF textual, texto pegado, plantillas y revisión masiva; OCR pendiente |
+| TD-R03 Importación | Validado técnicamente (alcance textual) | CSV/TSV/XLSX, PDF textual, texto pegado, plantillas y revisión masiva; OCR PNG/PDF validado en CI posterior |
 | TD-R04 Studio | Validado técnicamente (DEMO) | Diseño compacto, navegación y búsqueda |
 | TD-R05 Productividad | Ampliación local validada | Acciones, seguimiento, citaciones locales e ICS; Microsoft pendiente |
-| TD-R06 Ingresos | Validado técnicamente (dominio y exportación navegador) | Preparación masiva; recorrido de preparación en navegador pendiente |
+| TD-R06 Ingresos | Validado técnicamente (dominio y exportación navegador) | Preparación masiva; recorrido de preparación y exportación en ambos tamaños PASS |
 | TD-R07 Datos privados | Fundamentos DEMO validados | Respaldo cifrado y protocolo de revisiones; backend/identidad autorizados pendientes |
 | TD-R08 Microsoft | Alcance local validado; proveedor pendiente | Vistas PA-06 a PA-09, ICS/citación e importación manual; conexiones requieren autorización |
 | TD-R09 Optimización | Checklist y reportes locales validados | Checklist masivo y reportes semanales; medición real y aceptación pendientes |
@@ -41,12 +41,16 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 
 | TD-SMART-RC01 Consolidación DEMO | Dominio y build PASS; QA observado | OCR local, prueba de ingresos masivos completa, auditoría y recuperación de lockfile; CI pendiente |
 
-| TD-SMART-RC02 Cierre técnico | Candidato | Actualización Vite, QA lote acotado, OCR PNG y PDF raster, nueva auditoría y lockfile |
+| TD-SMART-RC02 Cierre técnico | Cerrado por CI posterior REM01 | Actualización Vite, QA lote acotado, OCR PNG y PDF raster, nueva auditoría y lockfile |
 
-| Bloque A Smart Premium | npm ci/build/audit PASS; OCR PDF pendiente CI | Lockfile comprometido, npm ci, OCR PDF corrección candidata; aceptación visual/física pendiente |
-| Bloque B Flujo integral | Dominio/build y escritorio PASS; móvil pendiente | Espacio por vacante con siete pestañas y operaciones existentes acotadas; CI pendiente |
-| Bloque C Private | Pendiente | Entorno institucional autorizado, identidad y backend |
+| Bloque A Smart Premium | Cerrado técnicamente (DEMO) | Lockfile, npm ci, auditoría, OCR PNG/PDF y navegador PASS; aceptación visual/física pendiente |
+| Bloque B Flujo integral | Cerrado técnicamente (DEMO) | Espacio por vacante con siete pestañas y operaciones existentes acotadas; CI PASS |
+| Bloque C Private | Preparación arquitectónica; bloqueado para datos reales | Entorno institucional autorizado, identidad y backend |
 | Bloque D Microsoft | Pendiente | Permisos, licencias y flujos reales |
 | Bloque E Piloto | Pendiente | Aceptación y medición |
 
-| TD-REM01 Remuneraciones | Candidato | Exportación DEMO de 18 columnas visibles, revisión manual de campos adicionales y TSV/CSV; CI pendiente |
+| TD-REM01 Remuneraciones | Validado técnicamente (DEMO) | Exportación de 18 columnas preliminares, TSV/CSV y revisión; plantilla completa y escritura institucional pendientes |
+
+
+## Continuidad aprobada
+A/B cerrados técnicamente al SHA 96ebbd9d7bba55df6895aece845ffbe53fd229c3; REM01 validado dentro del formato preliminar. Siguiente bloque C: decisión de entorno institucional y piloto sintético privado, sin creación de infraestructura no autorizada. D: Microsoft condicionado a permisos/licencias y confirmación de plantilla completa. E: aceptación y medición. CI 45465159682/job 138698001579, SHA 96ebbd9d7bba55df6895aece845ffbe53fd229c3: SUCCESS; 145/145, npm ci y build PASS, npm audit 0 reportadas; BULK_INCOME_PASS, PAYROLL_EXPORT_PASS, PROCESS_WORKSPACE_PASS, OCR_PNG_PASS, OCR_PDF_PASS y BROWSER_PASS en Chromium 1366x900 y 390x844. OCR legacy resuelve el fallo observado. Alcance sintético, no prueba física ni aceptación institucional.

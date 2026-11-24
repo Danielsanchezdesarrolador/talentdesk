@@ -4,3 +4,8 @@ Aceptar tras validar CI del SHA, HTTPS, manifest, iconos y service worker, smoke
 
 ## Evidencia de primera publicación
 Captura del propietario: Deploy succeeded | Live, commit 778c90e, 14:33:40 GMT-3, duración 19 s. CI previa 45447300505 SUCCESS. No comprobación HTTP independiente: fetch no disponible y DNS falló desde entorno de trabajo; instalación física pendiente. No se comprobó facturación. No activar otro despliegue por esta actualización documental.
+
+
+## Candidato aprobado técnicamente A/B + REM01
+CI 45465159682/job 138698001579, SHA 96ebbd9d7bba55df6895aece845ffbe53fd229c3: SUCCESS; 145/145, npm ci y build PASS, npm audit 0 reportadas; BULK_INCOME_PASS, PAYROLL_EXPORT_PASS, PROCESS_WORKSPACE_PASS, OCR_PNG_PASS, OCR_PDF_PASS y BROWSER_PASS en Chromium 1366x900 y 390x844. OCR legacy resuelve el fallo observado. Alcance sintético, no prueba física ni aceptación institucional.
+El lockfile está comprometido: para siguiente publicación manual se recomienda Build Command `npm ci --no-audit --no-fund && npm run build`, conservar Node, dist, origen y Auto-Deploy Off. No se cambió configuración. El propietario reportó un LIVE posterior a la primera publicación, sin SHA comprobado. Esta versión nueva no se ha desplegado desde esta entrega. Antes de aceptar, respaldo sintético opcional y prueba de flujos físicos. No introducir datos reales.

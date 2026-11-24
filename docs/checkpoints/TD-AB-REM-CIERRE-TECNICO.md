@@ -1,0 +1,6 @@
+# Cierre técnico A/B y REM01 — 24/11/2026
+CI 45465159682/job 138698001579, SHA 96ebbd9d7bba55df6895aece845ffbe53fd229c3: SUCCESS; 145/145, npm ci y build PASS, npm audit 0 reportadas; BULK_INCOME_PASS, PAYROLL_EXPORT_PASS, PROCESS_WORKSPACE_PASS, OCR_PNG_PASS, OCR_PDF_PASS y BROWSER_PASS en Chromium 1366x900 y 390x844. OCR legacy resuelve el fallo observado. Alcance sintético, no prueba física ni aceptación institucional.
+## Alcance cerrado
+A: lockfile definitivo, instalación reproducible, compilación, auditoría y OCR local con fixtures sintéticos. B: espacio integral por vacante, reportes, operaciones por postulación, navegación y estado de borradores. REM01: dos filas sintéticas de 18 columnas, exportación CSV y vista previa TSV en ambos tamaños, no datos reales.
+## Continuidad
+Aceptación visual/física, SHA del despliegue nuevo, plantilla autorizada completa (solo 18 columnas preliminares), importación directa desde planilla externa y escritura Microsoft siguen pendientes. No se agregan datos de salud reales ni se infieren campos. Próximo bloque C, ver docs/architecture/PRIVATE-WORKSPACE.md. No nuevo despliegue, infraestructura, gasto ni Codex. Esta publicación solo documentación, [skip ci] y [skip render].
