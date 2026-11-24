@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {xlsxFixture} from './xlsx-fixture.mjs';
+import {scannedPdf} from './scanned-pdf-fixture.mjs';
 import { createRequire } from 'node:module';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -457,24 +458,33 @@ try {
       await page.getByRole('button',{name:'Guardar ingresos en lote'}).click();
       await page.getByText('2 ingresos preparados en lote. No enviados.',{exact:true}).waitFor();
       await page.reload();await nav.getByRole('button',{name:'Ingresos',exact:true}).click();
-      for(const name of ['Persona PDF','Persona Pegada'])assert.match(await page.locator('.recent').filter({hasText:name}).innerText(),/Preparado/);
+      for(const name of ['Persona PDF','Persona Pegada']){const hire=page.locator('.recent').filter({hasText:name,has:page.getByRole('button',{name:'Ver ingreso',exact:true})});assert.equal(await hire.count(),1);assert.match(await hire.innerText(),/Preparado/);}
       await page.getByRole('button',{name:'Abrir operaciones masivas'}).click();
       await page.getByRole('button',{name:'Seleccionar ingresos visibles'}).click();
       await page.getByRole('button',{name:'Vista previa filas Excel'}).click();
-      const lines=(await page.getByLabel('Filas Excel del lote').inputValue()).split('\n');assert.equal(lines.length,2);assert.ok(lines.every(l=>l.split('\t').length===11));
+      const lines=(await page.getByLabel('Filas Excel del lote').inputValue()).split('\n');assert.equal(lines.length,2);assert.ok(lines.every(l=>l.split('\t').length===11));console.log('BULK_INCOME_PASS '+viewport.width+' '+lines.length+' rows');
       await page.screenshot({path:'qa-output/ingresos-lote-completo-'+viewport.width+'.png',fullPage:true});
       // OCR fixture generated in the browser, no actual CV.
       await nav.getByRole('button',{name:'Configuración',exact:true}).click();
       await page.getByRole('checkbox',{name:'Confirmo que todos los archivos son ficticios.'}).check();
-      const raster=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=1500;c.height=700;const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.fillStyle='#000';ctx.font='bold 42px Arial';['Nombre: Persona','Apellido: Escaneo','Codigo DEMO: DEMO-OCR','Correo: ocr@example.invalid','Telefono: 000000099'].forEach((line,i)=>ctx.fillText(line,50,90+i*100));return c.toDataURL('image/png').split(',')[1];});
+      const raster=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=1500;c.height=700;const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.fillStyle='#000';ctx.font='bold 42px Arial';['Nombre: Persona','Apellido: Escaneo','Codigo DEMO: DEMO-OCR','Correo: ocr@example.invalid','Telefono: 000000099'].forEach((line,i)=>ctx.fillText(line,50,90+i*100));return {png:c.toDataURL('image/png').split(',')[1],jpeg:c.toDataURL('image/jpeg',0.95).split(',')[1]};});
       const external=[];const watch=req=>{if(/^https?:/.test(req.url())&&!req.url().startsWith(base+'/'))external.push(req.url());};context.on('request',watch);
       await context.route('**/*',route=>/^https?:/.test(route.request().url())&&!route.request().url().startsWith(base+'/')?route.abort():route.continue());
-      await page.getByLabel('CV escaneado ficticio OCR').setInputFiles({name:'escaneo-demo.png',mimeType:'image/png',buffer:Buffer.from(raster,'base64')});
+      await page.getByLabel('CV escaneado ficticio OCR').setInputFiles({name:'escaneo-demo.png',mimeType:'image/png',buffer:Buffer.from(raster.png,'base64')});
       await page.getByText(/escaneo-demo\.png ·/).waitFor({timeout:90000});
       await page.getByText(/escaneo-demo\.png ·/).click();
       assert.match(await page.getByLabel('escaneo-demo.png Nombre',{exact:true}).inputValue(),/Persona/i);
       assert.match(await page.getByLabel('escaneo-demo.png Apellido',{exact:true}).inputValue(),/Escaneo/i);
       assert.equal(await page.getByLabel('escaneo-demo.png Código DEMO',{exact:true}).inputValue(),'DEMO-OCR');
+      console.log('OCR_PNG_PASS '+viewport.width);
+      const scanned=scannedPdf(Buffer.from(raster.jpeg,'base64'),1500,700);
+      await page.getByLabel('CV escaneado ficticio OCR').setInputFiles({name:'escaneo-imagen-demo.pdf',mimeType:'application/pdf',buffer:scanned});
+      await page.getByText(/escaneo-imagen-demo\.pdf ·/).waitFor({timeout:90000});
+      await page.getByText(/escaneo-imagen-demo\.pdf ·/).click();
+      assert.match(await page.getByLabel('escaneo-imagen-demo.pdf Nombre',{exact:true}).inputValue(),/Persona/i);
+      assert.match(await page.getByLabel('escaneo-imagen-demo.pdf Apellido',{exact:true}).inputValue(),/Escaneo/i);
+      assert.equal(await page.getByLabel('escaneo-imagen-demo.pdf Código DEMO',{exact:true}).inputValue(),'DEMO-OCR');
+      console.log('OCR_PDF_PASS '+viewport.width);
       assert.deepEqual(external,[]);context.off('request',watch);await context.unroute('**/*');
       await page.screenshot({path:'qa-output/ocr-'+viewport.width+'.png',fullPage:true});
       assert.deepEqual(errors,[]);

@@ -39,4 +39,6 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 
 | TD-COM02 Historial y consolidación | Validado técnicamente (DEMO) | Borradores revisados persistentes y CV textual mejorado; CI PASS |
 
-| TD-SMART-RC01 Consolidación DEMO | Candidato | OCR local, prueba de ingresos masivos completa, auditoría y recuperación de lockfile; CI pendiente |
+| TD-SMART-RC01 Consolidación DEMO | Dominio y build PASS; QA observado | OCR local, prueba de ingresos masivos completa, auditoría y recuperación de lockfile; CI pendiente |
+
+| TD-SMART-RC02 Cierre técnico | Candidato | Actualización Vite, QA lote acotado, OCR PNG y PDF raster, nueva auditoría y lockfile |
