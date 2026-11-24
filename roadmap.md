@@ -45,7 +45,7 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 
 | Bloque A Smart Premium | Cerrado técnicamente (DEMO) | Lockfile, npm ci, auditoría, OCR PNG/PDF y navegador PASS; aceptación visual/física pendiente |
 | Bloque B Flujo integral | Cerrado técnicamente (DEMO) | Espacio por vacante con siete pestañas y operaciones existentes acotadas; CI PASS |
-| Bloque C Private | En desarrollo; bloqueado para datos reales | C01 laboratorio local candidato; identidad institucional, backend y conexión UI pendientes |
+| Bloque C Private | En desarrollo; bloqueado para datos reales | C01 validado; C02/C03 interfaz y sincronización de laboratorio candidatas; proveedor/identidad institucional pendientes |
 | Bloque D Microsoft | Pendiente | Permisos, licencias y flujos reales |
 | Bloque E Piloto | Pendiente | Aceptación y medición |
 
@@ -55,4 +55,6 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 ## Continuidad aprobada
 A/B cerrados técnicamente al SHA 96ebbd9d7bba55df6895aece845ffbe53fd229c3; REM01 validado dentro del formato preliminar. Siguiente bloque C: decisión de entorno institucional y piloto sintético privado, sin creación de infraestructura no autorizada. D: Microsoft condicionado a permisos/licencias y confirmación de plantilla completa. E: aceptación y medición. CI 45465159682/job 138698001579, SHA 96ebbd9d7bba55df6895aece845ffbe53fd229c3: SUCCESS; 145/145, npm ci y build PASS, npm audit 0 reportadas; BULK_INCOME_PASS, PAYROLL_EXPORT_PASS, PROCESS_WORKSPACE_PASS, OCR_PNG_PASS, OCR_PDF_PASS y BROWSER_PASS en Chromium 1366x900 y 390x844. OCR legacy resuelve el fallo observado. Alcance sintético, no prueba física ni aceptación institucional.
 
-| TD-C01 Laboratorio privado | Candidato | Sesión servidor, API HTTP, SQLite transaccional, conflictos, recibos y recuperación sintética; CI pendiente |
+| TD-C01 Laboratorio privado | Validado técnicamente (local sintético) | Sesión servidor, API HTTP, SQLite transaccional, conflictos, recibos y recuperación sintética; CI PASS |
+
+| TD-C02/C03 Acceso y sincronización | Candidato de laboratorio | UI aislada con generación de candidato, revisión compartida y conflictos; CI pendiente |

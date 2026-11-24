@@ -48,6 +48,10 @@ jobs:
           preview_pid=$!
           trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
           node scripts/verify-browser.mjs
+      - name: Private synthetic browser journey (loopback only)
+        env:
+          QA_NODE_MODULES: ${{ runner.temp }}/talentdesk-qa/node_modules
+        run: node scripts/verify-private-browser.mjs
       - name: Save synthetic QA evidence and build
         if: success()
         uses: actions/upload-artifact@v4

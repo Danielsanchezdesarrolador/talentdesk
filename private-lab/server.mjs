@@ -1,12 +1,13 @@
 // Loopback-only synthetic laboratory. No CLI, no public listener, no production identity provider.
 import {createServer} from 'node:http';
+import {readFile} from 'node:fs/promises';
 import {createHash,randomBytes,timingSafeEqual} from 'node:crypto';
 import {openStore,validRequest} from './store.mjs';
 const COOKIE='td_lab_session',ROOT='/api/private-lab';
 const digest=s=>createHash('sha256').update(s).digest();
 const token=()=>randomBytes(32).toString('base64url');
 function body(req,max){return new Promise((resolve,reject)=>{let size=0,parts=[],exceeded=false;req.on('data',b=>{size+=b.length;if(size>max){exceeded=true;parts=[];}else if(!exceeded)parts.push(b);});req.on('end',()=>{if(exceeded)return reject(Error('too large'));try{resolve(JSON.parse(Buffer.concat(parts).toString('utf8')));}catch{reject(Error('invalid JSON'));}});req.on('error',reject);});}
-export async function startPrivateLab({path=':memory:',initial,clock=Date.now,ttlMs=15*60*1000}){
+export async function startPrivateLab({path=':memory:',initial,clock=Date.now,ttlMs=15*60*1000,ui=false}){
  if(!Number.isInteger(ttlMs)||ttlMs<100||ttlMs>3600000)throw Error('invalid TTL');
  const store=openStore(path,initial),secret=token(),secretHash=digest(secret),sessions=new Map();
  let origin='',failures=0;
@@ -25,6 +26,12 @@ export async function startPrivateLab({path=':memory:',initial,clock=Date.now,tt
    if(!['GET','POST'].includes(req.method))return respond(res,405,{error:'method'});
    if(req.method==='POST'&&(req.headers.origin!==origin||req.headers['content-type']!=='application/json'))return respond(res,403,{error:'denied'});
    const url=req.url;
+   if(ui&&req.method==='GET'){
+    const known={'/':['./index.html','text/html; charset=utf-8'],'/lab.css':['./lab.css','text/css; charset=utf-8'],'/lab.mjs':['./lab.mjs','text/javascript; charset=utf-8']};
+    const module=url?.match(/^\/modules\/([A-Za-z][A-Za-z0-9]*\.js)$/);
+    const entry=known[url]??(module?['../.test-build/'+module[1],'text/javascript; charset=utf-8']:null);
+    if(entry){let asset;try{asset=await readFile(new URL(entry[0],import.meta.url));}catch{return respond(res,404,{error:'not found'});}res.writeHead(200,{'Content-Type':entry[1],'Cache-Control':'no-store, private','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Content-Security-Policy':"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"});return res.end(asset);}
+   }
    if(req.method==='POST'&&url===ROOT+'/login'){
     if(failures>=8)return respond(res,429,{error:'lab locked'});
     let value;try{value=await body(req,1024);}catch{return respond(res,400,{error:'invalid request'});}
