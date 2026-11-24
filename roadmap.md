@@ -27,6 +27,6 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 | TD-R04 Studio | Validado técnicamente (DEMO) | Diseño compacto, navegación y búsqueda |
 | TD-R05 Productividad | Base validada; ampliación candidata | Acciones, seguimiento, citaciones locales e ICS; Microsoft pendiente |
 | TD-R06 Ingresos | Candidato | Preparación masiva, exportación y plantillas; validación pendiente |
-| TD-R07 Datos privados | Pendiente | Entorno autorizado y recuperación |
+| TD-R07 Datos privados | Candidato fundacional | Respaldo cifrado y protocolo de revisiones; backend/identidad autorizados pendientes |
 | TD-R08 Microsoft | Pendiente | Integraciones autorizadas |
 | TD-R09 Optimización | Pendiente | Medición real de tiempos y aceptación |

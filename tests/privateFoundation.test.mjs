@@ -1,0 +1,14 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {makeBackup,inspectBackup} from '../.test-build/backup.js';
+import {encryptBackup,decryptBackup} from '../.test-build/encryptedBackup.js';
+import {publishRevision,reconcile} from '../.test-build/revisionSync.js';
+const raw=makeBackup({getItem:()=>null,setItem:()=>{}},'2026-11-24T12:00:00Z'),password='Frase-DEMO-suficientemente-larga';
+test('cifrado recupera respaldo validado y usa sal e IV diferentes',async()=>{const a=await encryptBackup(raw,password),b=await encryptBackup(raw,password);assert.notEqual(a,b);assert.equal(await decryptBackup(a,password),raw);assert.equal(inspectBackup(await decryptBackup(b,password)).counts.candidates,0);assert.ok(!a.includes('talentdesk.synthetic.v1'));});
+test('contraseña errónea y manipulación son rechazadas',async()=>{const a=await encryptBackup(raw,password);await assert.rejects(decryptBackup(a,'otra-frase-larga'),/incorrecta/);const b=JSON.parse(a);b.data=(b.data[0]==='A'?'B':'A')+b.data.slice(1);await assert.rejects(decryptBackup(JSON.stringify(b),password),/alterado/);b.iterations=1;await assert.rejects(decryptBackup(JSON.stringify(b),password),/compatible/);});
+test('no cifra respaldo inválido ni contraseña corta',async()=>{await assert.rejects(encryptBackup('bad',password));await assert.rejects(encryptBackup(raw,'corta'));});
+const req={requestId:'demo-request-1',expectedRevision:2,raw},receipt={requestId:req.requestId,revision:3,raw};
+test('confirmación coincide con solicitud, revisión y contenido',async()=>{assert.deepEqual(await publishRevision({write:async()=>({kind:'committed',receipt}),readReceipt:async()=>null},req),{kind:'confirmed',snapshot:{revision:3,raw}});});
+test('conflicto o denegación no reintentan ni leen',async()=>{for(const kind of ['conflict','denied']){let reads=0;const result=await publishRevision({write:async()=>({kind}),readReceipt:async()=>{reads++;return receipt}},req);assert.equal(result.kind,kind);assert.equal(reads,0);}});
+test('respuesta perdida se concilia con una sola escritura',async()=>{let writes=0;const result=await publishRevision({write:async()=>{writes++;throw Error('network')},readReceipt:async()=>receipt},req);assert.equal(result.kind,'confirmed');assert.equal(writes,1);});
+test('recibo incorrecto o inexistente no declara éxito ni reescribe',async()=>{let writes=0;const transport={write:async()=>{writes++;return {kind:'committed',receipt:{...receipt,revision:9}}},readReceipt:async()=>null};assert.equal((await publishRevision(transport,req)).kind,'uncertain');assert.equal((await reconcile(transport,req)).kind,'uncertain');assert.equal(writes,1);});
+test('solicitud corrupta no contacta transporte',async()=>{let writes=0;await assert.rejects(publishRevision({write:async()=>{writes++;return {kind:'conflict'}},readReceipt:async()=>null},{...req,raw:'bad'}));assert.equal(writes,0);});

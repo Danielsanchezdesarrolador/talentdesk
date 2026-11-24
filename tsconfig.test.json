@@ -20,6 +20,8 @@
     "src/smartVacancies.ts",
     "src/imports.ts",
     "src/productivity.ts",
-    "src/adminAutomation.ts"
+    "src/adminAutomation.ts",
+    "src/encryptedBackup.ts",
+    "src/revisionSync.ts"
   ]
 }

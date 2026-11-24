@@ -321,6 +321,17 @@ try {
       await page.getByRole('button',{name:'Descargar lote CSV'}).click();
       assert.equal((await csvDownload).suggestedFilename(),'ingresos-lote-DEMO.csv');
       await page.screenshot({path:'qa-output/ingresos-masivos-'+viewport.width+'.png',fullPage:true});
+      await nav.getByRole('button',{name:'Configuración',exact:true}).click();
+      const pass='Frase-DEMO-QA-suficientemente-larga';
+      await page.getByLabel('Contraseña del respaldo cifrado',{exact:true}).fill(pass);
+      await page.getByLabel('Repetir contraseña del respaldo',{exact:true}).fill(pass);
+      const encryptedDownload=page.waitForEvent('download');
+      await page.getByRole('button',{name:'Exportar respaldo cifrado DEMO'}).click();
+      const encrypted=await encryptedDownload;
+      const encryptedPath='qa-output/encrypted-DEMO-'+viewport.width+'.json';
+      await encrypted.saveAs(encryptedPath);
+      const encryptedFresh=await browser.newContext({viewport});
+      try{const p=await encryptedFresh.newPage();await p.goto(base);await p.getByRole('navigation',{name:'Módulos'}).getByRole('button',{name:'Configuración',exact:true}).click();await p.getByLabel('Archivo cifrado DEMO').setInputFiles(encryptedPath);await p.getByLabel('Contraseña del respaldo cifrado',{exact:true}).fill('contraseña-incorrecta');await p.getByRole('button',{name:'Descifrar y revisar respaldo'}).click();await p.getByText('Contraseña incorrecta o respaldo alterado.',{exact:true}).waitFor();await p.getByLabel('Contraseña del respaldo cifrado',{exact:true}).fill(pass);await p.getByRole('button',{name:'Descifrar y revisar respaldo'}).click();await p.getByText('Respaldo cifrado validado:',{exact:false}).waitFor();await p.getByRole('checkbox',{name:'Confirmo perfil vacío y otras pestañas cerradas.'}).check();await p.getByRole('button',{name:'Restaurar respaldo cifrado DEMO'}).click();await p.getByRole('heading',{name:'Resumen de hoy'}).waitFor();await p.getByRole('navigation',{name:'Módulos'}).getByRole('button',{name:'Candidatos',exact:true}).click();await p.getByRole('row').filter({hasText:'DEMO-IMPORT'}).waitFor();}finally{await encryptedFresh.close();}
       assert.deepEqual(errors,[]);
       console.log('BROWSER_PASS '+viewport.width+'x'+viewport.height+' create duplicate edit draft navigation reload search close filters layout');
     } finally {await context.close();}
