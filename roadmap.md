@@ -14,6 +14,6 @@ Objetivo: gestionar vacantes, candidatos, contactos, entrevistas e ingresos desd
 | TD-CP09 Automatización | Simulación validada (DEMO); integración pendiente | PA-01/02 preparación y simulación, siete flujos restantes planificados; integración real requiere autorización |
 | TD-CP10 Documentos | Validado técnicamente (DEMO) | Seguimiento documental e historial |
 | TD-CP11 Indicadores | Validado técnicamente (DEMO) | Dashboard y reportes calculados desde registros |
-| TD-CP12 PWA | Candidato publicado | Prueba física, recuperación y aceptación según alcance autorizado |
+| TD-CP12 PWA | CI PASS; LIVE reportado, aceptación pendiente | Prueba física, recuperación y aceptación según alcance autorizado |
 
 MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrador de correo, sin depender de integraciones externas. React/TypeScript/Vite para DEMO local; backend real por decidir. Integraciones Microsoft sujetas a permisos y licencias. No publicar datos reales ni recursos privados.
