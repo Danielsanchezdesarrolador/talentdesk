@@ -33,4 +33,6 @@ MVP: recorrido completo sintético desde vacante hasta fila de ingreso y borrado
 
 | TD-CIT01 Citaciones masivas | Validado técnicamente (DEMO) | Pegado Excel, horarios, revisión individual y exportación CSV DEMO; envío institucional pendiente |
 
-| TD-CIT02 Agenda masiva | Candidato | Agendar y reprogramar postulaciones, conservar historial, controlar hora exacta; CI pendiente |
+| TD-CIT02 Agenda masiva | Corrección de tipado publicada; CI pendiente | Agendar y reprogramar postulaciones, conservar historial, controlar hora exacta; CI pendiente |
+
+| TD-COM01 Comunicaciones | Candidato | Centro de borradores desde fuentes existentes, revisión y exportación; sin envío |

@@ -25,6 +25,7 @@
     "src/revisionSync.ts",
     "src/localWorkflows.ts",
     "src/bulkInvitations.ts",
-    "src/agendaBatch.ts"
+    "src/agendaBatch.ts",
+    "src/communications.ts"
   ]
 }
